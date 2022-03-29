@@ -65,9 +65,14 @@ if __name__ == "__main__":
         
         ## params
         model_ver = 'best.pth' # 사용하고자하는 모델 버전
+
+        if model_ver == 'best.pth':
+            model_ver = sorted([file for file in os.listdir(work_dir) if 'best' in file])[-1]
+
         model_pth = work_dir + model_ver
         score_thr = 0.05 #  detections with scores below this threshold will be removed.
         out_name = f'{work_dir}outputs/output.pkl'
+
 
         # 결과폴더 생성
         path = f'{work_dir}outputs/'
