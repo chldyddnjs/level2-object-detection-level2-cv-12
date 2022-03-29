@@ -9,7 +9,7 @@
 # model settings
 model = dict(
     type='CascadeRCNN',
-    pretrained=None,
+    pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_tiny_1k_224.pth',
     backbone=dict(
         type='ConvNeXt',
         in_chans=3,
