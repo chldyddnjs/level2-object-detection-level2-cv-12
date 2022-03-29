@@ -79,6 +79,16 @@ def parse_args():
         default='none',
         help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
+    ##########################추가 args##################################
+    # wandb 실험이름용
+    parser.add_argument('--wandb_exp', type=str)
+    # 데이터셋(k-fold) 변경용
+    parser.add_argument('--fold_num', type=int, default=0)
+    # 유저
+    parser.add_argument('--user_name', type=str)
+    # epoch 변경
+    parser.add_argument('--epochs', type=int)
+    #####################################################################
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -100,6 +110,28 @@ def main():
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
+
+    ##########################코드추가##################################
+    ## wandb 
+    cfg.log_config = dict(
+    interval=50,
+    hooks=[
+        dict(type='TextLoggerHook'),
+        # dict(type='TensorboardLoggerHook'),
+        dict(type='WandbLoggerHook',
+                init_kwargs = dict(project='detection',
+                                    entity='yolo12',
+                                    name = f'{args.user_name}_fold{args.fold_num}_{args.wandb_exp}',
+                                    config = dict(cfg)
+        ) 
+        )
+    ])
+    ## data fold 변경
+    cfg.data.train.ann_file = f'{cfg.data_root}fold_{args.fold_num}_train.json'
+    cfg.data.val.ann_file = f'{cfg.data_root}fold_{args.fold_num}_val.json'
+    ## epoch 변경
+    cfg.runner.max_epochs = args.epochs
+    #####################################################################
 
     # set multi-process settings
     setup_multi_processes(cfg)
