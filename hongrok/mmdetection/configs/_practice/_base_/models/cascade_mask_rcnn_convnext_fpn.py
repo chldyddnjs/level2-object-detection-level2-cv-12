@@ -5,11 +5,13 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-
+# https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_1k_224_ema.pth
+# https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_1k_384_ema.pth
+# https://dl.fbaipublicfiles.com/convnext/coco/cascade_mask_rcnn_convnext_xlarge_22k_3x.pth
 # model settings
 model = dict(
     type='CascadeRCNN',
-    pretrained=None,
+    pretrained = 'https://dl.fbaipublicfiles.com/convnext/coco/cascade_mask_rcnn_convnext_xlarge_22k_3x.pth',
     backbone=dict(
         type='ConvNeXt',
         in_chans=3,
