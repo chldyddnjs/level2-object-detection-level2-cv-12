@@ -42,7 +42,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     ## parmas
     # config_file='configs/_practice/cascade_rcnn_swin-t-p4-w7_fpn_1x_coco.py'
-    config_file='configs/_practice/swin/mask_rcnn_swin-s-p4-w7_fpn_fp16_ms-crop-3x_coco.py' # config file
+    # config_file='configs/_practice/swin/mask_rcnn_swin-s-p4-w7_fpn_fp16_ms-crop-3x_coco.py' # config file
+    config_file='configs/_practice/convnext/cascade_mask_rcnn_convnext_xlarge_patch4_window7_mstrain_480-800_giou_4conv1f_adamw_3x_coco_in22k.py'
     basename = osp.basename(config_file).split('.')[0]   
     work_dir=f'work_dirs/{basename}/' # 학습결과가 저장될 폴더
     user_name='hongrok' # wandb에 올라갈 실험한 유저이름
