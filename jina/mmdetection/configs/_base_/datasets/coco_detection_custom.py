@@ -26,7 +26,7 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(512, 512), keep_ratio=True), # 이미지 사이즈
+    dict(type='Resize', img_scale=(1024, 1024), keep_ratio=True), # 이미지 사이즈
     dict(type='RandomFlip', flip_ratio=0.5),
     # dict(
     #     type='Albu', # albumentation
@@ -53,7 +53,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(512, 512), # 이미지 사이즈
+        img_scale=(1024, 1024), # 이미지 사이즈
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -65,7 +65,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=4,
+    samples_per_gpu=2, # 배치 사이즈
     workers_per_gpu=1,
     train=dict(
         type=dataset_type,
