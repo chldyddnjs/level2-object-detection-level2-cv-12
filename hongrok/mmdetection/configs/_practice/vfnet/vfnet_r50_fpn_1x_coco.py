@@ -58,54 +58,55 @@ model = dict(
         max_per_img=100))
 
 # data setting
-dataset_type = 'CocoDataset'
-data_root = '../../dataset/'
+# dataset_type = 'CocoDataset'
+# data_root = '../../dataset/'
 # img_norm_cfg = dict(
 #     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
-img_norm_cfg = dict(
-    mean=[123.6506697 , 117.39730243, 110.07542563], 
-    std=[54.03457934, 53.36968771, 54.78390763], to_rgb=True)
-train_pipeline = [
-    dict(type='LoadImageFromFile'),
-    dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
-    dict(type='RandomFlip', flip_ratio=0.5),
-    dict(type='Normalize', **img_norm_cfg),
-    dict(type='Pad', size_divisor=32),
-    dict(type='DefaultFormatBundle'),
-    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
-]
-test_pipeline = [
-    dict(type='LoadImageFromFile'),
-    dict(
-        type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
-        flip=False,
-        transforms=[
-            dict(type='Resize', keep_ratio=True),
-            dict(type='RandomFlip'),
-            dict(type='Normalize', **img_norm_cfg),
-            dict(type='Pad', size_divisor=32),
-            dict(type='DefaultFormatBundle'),
-            dict(type='Collect', keys=['img']),
-        ])
-]
-data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=2,
-    train=dict(pipeline=train_pipeline),
-    val=dict(pipeline=test_pipeline),
-    test=dict(pipeline=test_pipeline))
+# img_norm_cfg = dict(
+#     mean=[123.6506697 , 117.39730243, 110.07542563], 
+#     std=[54.03457934, 53.36968771, 54.78390763], to_rgb=True)
+# train_pipeline = [
+#     dict(type='LoadImageFromFile'),
+#     dict(type='LoadAnnotations', with_bbox=True),
+#     dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+#     dict(type='RandomFlip', flip_ratio=0.5),
+#     dict(type='Normalize', **img_norm_cfg),
+#     dict(type='Pad', size_divisor=32),
+#     dict(type='DefaultFormatBundle'),
+#     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
+# ]
+# test_pipeline = [
+#     dict(type='LoadImageFromFile'),
+#     dict(
+#         type='MultiScaleFlipAug',
+#         img_scale=(1333, 800),
+#         flip=False,
+#         transforms=[
+#             dict(type='Resize', keep_ratio=True),
+#             dict(type='RandomFlip'),
+#             dict(type='Normalize', **img_norm_cfg),
+#             dict(type='Pad', size_divisor=32),
+#             dict(type='DefaultFormatBundle'),
+#             dict(type='Collect', keys=['img']),
+#         ])
+# ]
+# data = dict(
+#     samples_per_gpu=2,
+#     workers_per_gpu=2,
+    # train=dict(pipeline=train_pipeline),
+    # val=dict(pipeline=test_pipeline),
+    # test=dict(pipeline=test_pipeline)
+    # )
 
 # optimizer
-optimizer = dict(
-    lr=0.01, paramwise_cfg=dict(bias_lr_mult=2., bias_decay_mult=0.))
-optimizer_config = dict(grad_clip=None)
+# optimizer = dict(
+#     lr=0.01, paramwise_cfg=dict(bias_lr_mult=2., bias_decay_mult=0.))
+# optimizer_config = dict(grad_clip=None)
 # learning policy
-lr_config = dict(
-    policy='step',
-    warmup='linear',
-    warmup_iters=500,
-    warmup_ratio=0.1,
-    step=[8, 11])
-runner = dict(type='EpochBasedRunner', max_epochs=12)
+# lr_config = dict(
+#     policy='step',
+#     warmup='linear',
+#     warmup_iters=500,
+#     warmup_ratio=0.1,
+#     step=[8, 11])
+# runner = dict(type='EpochBasedRunner', max_epochs=12)

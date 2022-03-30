@@ -42,19 +42,23 @@ data = dict(
         classes = classes, 
         # ann_file=data_root + 'fold_0_train.json',
         img_prefix=data_root,
-        pipeline=train_pipeline),
+        # pipeline=train_pipeline
+        ),
     val=dict(
         type=dataset_type,
         classes = classes, 
         # ann_file=data_root + 'fold_0_val.json',
         img_prefix=data_root,
-        pipeline=test_pipeline),
+        # pipeline=test_pipeline
+        ),
     test=dict(
         type=dataset_type,
         classes = classes, 
         ann_file=data_root + 'test.json',
         img_prefix=data_root,
-        pipeline=test_pipeline))
+        # pipeline=test_pipeline
+        )
+    )
 evaluation = dict(interval=1, metric='bbox', save_best='bbox_mAP_50')
 
 ##

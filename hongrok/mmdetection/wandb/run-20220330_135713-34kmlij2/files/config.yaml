@@ -1,0 +1,396 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.11
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.7.11
+    start_time: 1648648633
+    t:
+      1:
+      - 1
+      - 37
+      - 38
+      - 41
+      2:
+      - 1
+      - 37
+      - 38
+      - 41
+      3:
+      - 13
+      - 16
+      4: 3.7.11
+      5: 0.12.11
+      8:
+      - 5
+checkpoint_config:
+  desc: null
+  value:
+    interval: 1
+    max_keep_ckpts: 2
+    save_last: true
+classes:
+  desc: null
+  value:
+  - General trash
+  - Paper
+  - Paper pack
+  - Metal
+  - Glass
+  - Plastic
+  - Styrofoam
+  - Plastic bag
+  - Battery
+  - Clothing
+custom_hooks:
+  desc: null
+  value:
+  - type: NumClassCheckHook
+data:
+  desc: null
+  value:
+    samples_per_gpu: 2
+    test:
+      ann_file: ../../dataset/test.json
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: ../../dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - flip: false
+        img_scale:
+        - 1333
+        - 800
+        transforms:
+        - keep_ratio: true
+          type: Resize
+        - type: RandomFlip
+        - mean:
+          - 123.6506697
+          - 117.39730243
+          - 110.07542563
+          std:
+          - 54.03457934
+          - 53.36968771
+          - 54.78390763
+          to_rgb: true
+          type: Normalize
+        - size_divisor: 32
+          type: Pad
+        - type: DefaultFormatBundle
+        - keys:
+          - img
+          type: Collect
+        type: MultiScaleFlipAug
+      type: CocoDataset
+    train:
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: ../../dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - type: LoadAnnotations
+        with_bbox: true
+      - img_scale:
+        - - 1333
+          - 480
+        - - 1333
+          - 960
+        keep_ratio: true
+        multiscale_mode: range
+        type: Resize
+      - flip_ratio: 0.5
+        type: RandomFlip
+      - mean:
+        - 123.6506697
+        - 117.39730243
+        - 110.07542563
+        std:
+        - 54.03457934
+        - 53.36968771
+        - 54.78390763
+        to_rgb: true
+        type: Normalize
+      - size_divisor: 32
+        type: Pad
+      - type: DefaultFormatBundle
+      - keys:
+        - img
+        - gt_bboxes
+        - gt_labels
+        type: Collect
+      type: CocoDataset
+    val:
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: ../../dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - flip: false
+        img_scale:
+        - 1333
+        - 800
+        transforms:
+        - keep_ratio: true
+          type: Resize
+        - type: RandomFlip
+        - mean:
+          - 123.6506697
+          - 117.39730243
+          - 110.07542563
+          std:
+          - 54.03457934
+          - 53.36968771
+          - 54.78390763
+          to_rgb: true
+          type: Normalize
+        - size_divisor: 32
+          type: Pad
+        - type: DefaultFormatBundle
+        - keys:
+          - img
+          type: Collect
+        type: MultiScaleFlipAug
+      type: CocoDataset
+    workers_per_gpu: 2
+data_root:
+  desc: null
+  value: ../../dataset/
+dataset_type:
+  desc: null
+  value: CocoDataset
+dist_params:
+  desc: null
+  value:
+    backend: nccl
+evaluation:
+  desc: null
+  value:
+    interval: 1
+    metric: bbox
+    save_best: bbox_mAP_50
+img_norm_cfg:
+  desc: null
+  value:
+    mean:
+    - 123.6506697
+    - 117.39730243
+    - 110.07542563
+    std:
+    - 54.03457934
+    - 53.36968771
+    - 54.78390763
+    to_rgb: true
+load_from:
+  desc: null
+  value: null
+log_level:
+  desc: null
+  value: INFO
+lr_config:
+  desc: null
+  value:
+    min_lr_ratio: 1.0e-06
+    policy: CosineAnnealing
+    warmup: linear
+    warmup_iters: 1000
+    warmup_ratio: 0.01
+model:
+  desc: null
+  value:
+    backbone:
+      base_width: 26
+      depth: 101
+      frozen_stages: 1
+      norm_cfg:
+        requires_grad: true
+        type: BN
+      norm_eval: true
+      num_stages: 4
+      out_indices:
+      - 0
+      - 1
+      - 2
+      - 3
+      scales: 4
+      style: pytorch
+      type: Res2Net
+    bbox_head:
+      center_sampling: false
+      dcn_on_last_conv: false
+      feat_channels: 256
+      in_channels: 256
+      loss_bbox:
+        loss_weight: 1.5
+        type: GIoULoss
+      loss_bbox_refine:
+        loss_weight: 2.0
+        type: GIoULoss
+      loss_cls:
+        alpha: 0.75
+        gamma: 2.0
+        iou_weighted: true
+        loss_weight: 1.0
+        type: VarifocalLoss
+        use_sigmoid: true
+      num_classes: 10
+      stacked_convs: 3
+      strides:
+      - 8
+      - 16
+      - 32
+      - 64
+      - 128
+      type: VFNetHead
+      use_atss: true
+      use_vfl: true
+    neck:
+      add_extra_convs: on_output
+      in_channels:
+      - 256
+      - 512
+      - 1024
+      - 2048
+      num_outs: 5
+      out_channels: 256
+      relu_before_extra_convs: true
+      start_level: 1
+      type: FPN
+    pretrained: configs/_practice/vfnet/vfnet_r2_101_ms_2x_49.2.pth
+    test_cfg:
+      max_per_img: 100
+      min_bbox_size: 0
+      nms:
+        iou_threshold: 0.6
+        type: nms
+      nms_pre: 1000
+      score_thr: 0.05
+    train_cfg:
+      allowed_border: -1
+      assigner:
+        topk: 9
+        type: ATSSAssigner
+      debug: false
+      pos_weight: -1
+    type: VFNet
+mp_start_method:
+  desc: null
+  value: fork
+opencv_num_threads:
+  desc: null
+  value: 0
+optimizer:
+  desc: null
+  value:
+    lr: 0.0001
+    type: AdamW
+    weight_decay: 1.0e-05
+optimizer_config:
+  desc: null
+  value: {}
+resume_from:
+  desc: null
+  value: null
+runner:
+  desc: null
+  value:
+    type: EpochBasedRunner
+test_pipeline:
+  desc: null
+  value:
+  - type: LoadImageFromFile
+  - flip: false
+    img_scale:
+    - 1333
+    - 800
+    transforms:
+    - keep_ratio: true
+      type: Resize
+    - type: RandomFlip
+    - mean:
+      - 123.6506697
+      - 117.39730243
+      - 110.07542563
+      std:
+      - 54.03457934
+      - 53.36968771
+      - 54.78390763
+      to_rgb: true
+      type: Normalize
+    - size_divisor: 32
+      type: Pad
+    - type: DefaultFormatBundle
+    - keys:
+      - img
+      type: Collect
+    type: MultiScaleFlipAug
+train_pipeline:
+  desc: null
+  value:
+  - type: LoadImageFromFile
+  - type: LoadAnnotations
+    with_bbox: true
+  - img_scale:
+    - - 1333
+      - 480
+    - - 1333
+      - 960
+    keep_ratio: true
+    multiscale_mode: range
+    type: Resize
+  - flip_ratio: 0.5
+    type: RandomFlip
+  - mean:
+    - 123.6506697
+    - 117.39730243
+    - 110.07542563
+    std:
+    - 54.03457934
+    - 53.36968771
+    - 54.78390763
+    to_rgb: true
+    type: Normalize
+  - size_divisor: 32
+    type: Pad
+  - type: DefaultFormatBundle
+  - keys:
+    - img
+    - gt_bboxes
+    - gt_labels
+    type: Collect
+workflow:
+  desc: null
+  value:
+  - - train
+    - 1

@@ -50,7 +50,7 @@ if __name__ == "__main__":
     user_name='hongrok' # wandb에 올라갈 실험한 유저이름
     fold_num=0 # 사용할 데이터 fold 번호
     wandb_exp=basename+'_pretrained' # wandb에 올라갈 실험이름
-    epochs = 36 # 실행할 epochs
+    epochs = 50 # 실행할 epochs
     # pretrained = 'https://dl.fbaipublicfiles.com/convnext/coco/cascade_mask_rcnn_convnext_xlarge_22k_3x.pth'
 
     if args.train:

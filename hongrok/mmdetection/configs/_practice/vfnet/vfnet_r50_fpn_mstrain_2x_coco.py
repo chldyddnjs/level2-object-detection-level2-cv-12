@@ -9,9 +9,17 @@ train_pipeline = [
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='Resize',
-        img_scale=[(1333, 480), (1333, 960)],
-        multiscale_mode='range',
+        img_scale=[(1024, 1024)],
+        ratio_range=(0.5, 1.5),
+        # multiscale_mode='range',
         keep_ratio=True),
+    dict(
+        type='CutOut',
+        n_holes=(5, 10),
+        cutout_shape=[(4, 4), (4, 8), (8, 4), (8, 8),
+                      (16, 8), (8, 16), (16, 16), (16, 32), (32, 16), (32, 32),
+                      (32, 48), (48, 32), (48, 48)],
+        ),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
@@ -22,7 +30,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=(1200, 1200),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -38,5 +46,5 @@ data = dict(
     val=dict(pipeline=test_pipeline),
     test=dict(pipeline=test_pipeline))
 # learning policy
-lr_config = dict(step=[16, 22])
-runner = dict(type='EpochBasedRunner', max_epochs=24)
+# lr_config = dict(step=[16, 22])
+# runner = dict(type='EpochBasedRunner', max_epochs=24)
