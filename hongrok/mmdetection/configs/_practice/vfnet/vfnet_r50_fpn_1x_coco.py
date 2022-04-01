@@ -10,7 +10,7 @@ model = dict(
         depth=50,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
-        frozen_stages=1,
+        frozen_stages=-1,
         norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
         style='pytorch',
@@ -54,7 +54,8 @@ model = dict(
         nms_pre=1000,
         min_bbox_size=0,
         score_thr=0.05,
-        nms=dict(type='nms', iou_threshold=0.6),
+        # nms=dict(type='nms', iou_threshold=0.6),
+        nms=dict(type='soft_nms', iou_threshold=0.5, min_score=0.05,),
         max_per_img=100))
 
 # data setting
@@ -100,13 +101,15 @@ model = dict(
 
 # optimizer
 # optimizer = dict(
-#     lr=0.01, paramwise_cfg=dict(bias_lr_mult=2., bias_decay_mult=0.))
-# optimizer_config = dict(grad_clip=None)
+    # lr=0.01, paramwise_cfg=dict(bias_lr_mult=2., bias_decay_mult=0.))
+# optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+# optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+optimizer_config=dict(grad_clip=None)
 # learning policy
-# lr_config = dict(
-#     policy='step',
-#     warmup='linear',
-#     warmup_iters=500,
-#     warmup_ratio=0.1,
-#     step=[8, 11])
+lr_config = dict(
+    policy='step',
+    warmup='linear',
+    warmup_iters=500,
+    warmup_ratio=0.1,
+    step=[1, 5])
 # runner = dict(type='EpochBasedRunner', max_epochs=12)

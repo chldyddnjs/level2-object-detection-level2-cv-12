@@ -39,20 +39,21 @@ model = dict(
             roi_layer=dict(type='RoIAlign', output_size=7, sampling_ratio=0),
             out_channels=256,
             featmap_strides=[4, 8, 16, 32]),
-        bbox_head=dict(
-            type='Shared2FCBBoxHead',
-            in_channels=256,
-            fc_out_channels=1024,
-            roi_feat_size=7,
-            num_classes=10,
-            bbox_coder=dict(
-                type='DeltaXYWHBBoxCoder',
-                target_means=[0., 0., 0., 0.],
-                target_stds=[0.1, 0.1, 0.2, 0.2]),
-            reg_class_agnostic=False,
-            loss_cls=dict(
-                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-            loss_bbox=dict(type='L1Loss', loss_weight=1.0))),
+        # bbox_head=dict(
+        #     type='Shared2FCBBoxHead',
+        #     in_channels=256,
+        #     fc_out_channels=1024,
+        #     roi_feat_size=7,
+        #     num_classes=10,
+        #     bbox_coder=dict(
+        #         type='DeltaXYWHBBoxCoder',
+        #         target_means=[0., 0., 0., 0.],
+        #         target_stds=[0.1, 0.1, 0.2, 0.2]),
+        #     reg_class_agnostic=False,
+        #     loss_cls=dict(
+        #         type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
+        #     loss_bbox=dict(type='L1Loss', loss_weight=1.0))
+        ),
     # model training and testing settings
     train_cfg=dict(
         rpn=dict(
@@ -75,7 +76,7 @@ model = dict(
         rpn_proposal=dict(
             nms_pre=2000,
             max_per_img=1000,
-            nms=dict(type='nms', iou_threshold=0.7),
+            nms=dict(type='nms', iou_threshold=0.5),#0.7 -> 0.5변경
             min_bbox_size=0),
         rcnn=dict(
             assigner=dict(
@@ -97,7 +98,7 @@ model = dict(
         rpn=dict(
             nms_pre=1000,
             max_per_img=1000,
-            nms=dict(type='nms', iou_threshold=0.7),
+            nms=dict(type='nms', iou_threshold=0.5), #0.7 -> 0.5변경
             min_bbox_size=0),
         rcnn=dict(
             score_thr=0.05,

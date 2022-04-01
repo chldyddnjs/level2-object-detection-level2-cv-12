@@ -1,0 +1,1 @@
+{"val/bbox_mAP": 0.0, "val/bbox_mAP_50": 0.0, "val/bbox_mAP_75": 0.0, "val/bbox_mAP_s": 0.0, "val/bbox_mAP_m": 0.0, "val/bbox_mAP_l": 0.0, "learning_rate": 1.000000000000001e-06, "momentum": 0.9, "_timestamp": 1648659218, "_runtime": 128, "_step": 2, "_wandb": {"runtime": 130}}

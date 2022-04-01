@@ -1,4 +1,5 @@
 import os 
+import sys
 import pickle
 import argparse
 from os import path as osp
@@ -7,6 +8,7 @@ import pandas as pd
 from mmcv import Config
 from pycocotools.coco import COCO
 
+# export PYTHONPATH="${PYTHONPATH}:/opt/ml/detection/hongrok/mmdetection"
 def make_submission(output, config_file, model_ver, work_dir):
     # submission 양식에 맞게 output 후처리
     cfg = Config.fromfile(config_file)   
@@ -33,7 +35,7 @@ def make_submission(output, config_file, model_ver, work_dir):
     path = f'{work_dir}outputs/'
     if not osp.isdir(path):
         os.mkdir(path)
-    submission.to_csv(f'{path}submission_{model_ver.split(".")[0]}.csv')
+    submission.to_csv(f'{path}submission_{model_ver.split(".")[0]}.csv', index=None)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -44,12 +46,18 @@ if __name__ == "__main__":
     # config_file='configs/_practice/cascade_rcnn_swin-t-p4-w7_fpn_1x_coco.py'
     # config_file='configs/_practice/swin/mask_rcnn_swin-s-p4-w7_fpn_fp16_ms-crop-3x_coco.py' # config file
     # config_file='configs/_practice/convnext/cascade_mask_rcnn_convnext_xlarge_patch4_window7_mstrain_480-800_giou_4conv1f_adamw_3x_coco_in22k.py'
-    config_file = 'configs/_practice/vfnet/vfnet_r2_101_fpn_mstrain_2x_coco.py'
-    basename = osp.basename(config_file).split('.')[0]+'_pretrained'   
-    work_dir=f'work_dirs/{basename}/' # 학습결과가 저장될 폴더
+    # config_file = 'configs/_practice/vfnet/vfnet_r2_101_fpn_mstrain_2x_coco.py'
+    # config_file = 'configs/_practice/tood/tood_r101_fpn_dconv_c3-c5_mstrain_2x_coco.py'
+    # config_file = 'configs/_practice/double_head/dh_faster_rcnn_r50_fpn_1x_coco.py'
+    # config_file = 'configs/_practice/double_head/dh_faster_rcnn_swin_fpn_1x_coco.py'
+    config_file = 'configs/_practice/libra/libra_faster_rcnn_convnext_fpn_1x_coco.py'
+    # config_file = 'configs/_practice/cascade/cascade_rcnn_convnext_fpn_1x_coco.py'
+
+    basename = osp.basename(config_file).split('.')[0]   
+    work_dir=f'work_dirs/{basename}' # 학습결과가 저장될 폴더
     user_name='hongrok' # wandb에 올라갈 실험한 유저이름
     fold_num=0 # 사용할 데이터 fold 번호
-    wandb_exp=basename+'_pretrained' # wandb에 올라갈 실험이름
+    wandb_exp=basename # wandb에 올라갈 실험이름
     epochs = 50 # 실행할 epochs
     # pretrained = 'https://dl.fbaipublicfiles.com/convnext/coco/cascade_mask_rcnn_convnext_xlarge_22k_3x.pth'
 

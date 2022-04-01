@@ -112,6 +112,12 @@ def main():
         cfg.merge_from_dict(args.cfg_options)
 
     ##########################코드추가##################################
+    ## data fold 변경
+    cfg.data.train.ann_file = f'{cfg.data_root}clear_fold_{args.fold_num}_train.json'
+    cfg.data.val.ann_file = f'{cfg.data_root}clear_fold_{args.fold_num}_val.json'
+    ## epoch 변경
+    cfg.runner.max_epochs = args.epochs
+
     ## wandb 
     cfg.log_config = dict(
     interval=50,
@@ -126,11 +132,6 @@ def main():
         ) 
         )
     ])
-    ## data fold 변경
-    cfg.data.train.ann_file = f'{cfg.data_root}fold_{args.fold_num}_train.json'
-    cfg.data.val.ann_file = f'{cfg.data_root}fold_{args.fold_num}_val.json'
-    ## epoch 변경
-    cfg.runner.max_epochs = args.epochs
     #####################################################################
 
     # set multi-process settings

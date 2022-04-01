@@ -1,0 +1,1 @@
+{"train/loss_cls": 0.8028334832191467, "train/loss_bbox": 3.490785827636719, "train/loss": 4.29361930847168, "learning_rate": 0.01, "momentum": 0.9, "_timestamp": 1648725559, "_runtime": 1000, "_step": 2030, "val/bbox_mAP": 0.0, "val/bbox_mAP_50": 0.0, "val/bbox_mAP_75": 0.0, "val/bbox_mAP_s": 0.0, "val/bbox_mAP_m": 0.0, "val/bbox_mAP_l": 0.0, "_wandb": {"runtime": 1005}}

@@ -30,7 +30,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1200, 1200),
+        img_scale=(1024, 1024),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -46,5 +46,5 @@ data = dict(
     val=dict(pipeline=test_pipeline),
     test=dict(pipeline=test_pipeline))
 # learning policy
-# lr_config = dict(step=[16, 22])
-# runner = dict(type='EpochBasedRunner', max_epochs=24)
+lr_config = dict(step=[16, 22])
+runner = dict(type='EpochBasedRunner', max_epochs=24)
