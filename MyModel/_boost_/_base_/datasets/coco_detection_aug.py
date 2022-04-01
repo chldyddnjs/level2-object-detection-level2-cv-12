@@ -11,8 +11,8 @@ albu_train_transforms = [
     dict(
         type='ShiftScaleRotate',
         shift_limit=0.0625,
-        scale_limit=0.0,
-        rotate_limit=0,
+        scale_limit=10,
+        rotate_limit=10,
         interpolation=1,
         p=0.5),
     dict(
@@ -47,57 +47,12 @@ albu_train_transforms = [
         ],
         p=0.1),
 ]
-
 train_pipeline = [
-     dict(type='Mosaic', img_scale=img_scale, pad_val=114.0),
-    dict(
-        type='RandomAffine',
-        scaling_ratio_range=(0.1, 2),
-        border=(-img_scale[0] // 2, -img_scale[1] // 2)),
-    dict(
-        type='MixUp',
-        img_scale=img_scale,
-        ratio_range=(0.8, 1.6),
-        pad_val=114.0),
     dict(type='LoadImageFromFile'),
-    dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=img_scale, keep_ratio=True),
-    dict(type='RandomFlip', flip_ratio=0.5),
-    dict(
-        type='AutoAugment',
-        policies=[[
-            dict(
-                type='Resize',
-                img_scale=[(480, 1333), (512, 1333), (544, 1333), (576, 1333),
-                           (608, 1333), (640, 1333), (672, 1333), (704, 1333),
-                           (736, 1333), (768, 1333), (800, 1333)],
-                multiscale_mode='value',
-                keep_ratio=True)
-        ],
-                  [
-                      dict(
-                          type='Resize',
-                          img_scale=[(400, 1333), (500, 1333), (600, 1333)],
-                          multiscale_mode='value',
-                          keep_ratio=True),
-                      dict(
-                          type='RandomCrop',
-                          crop_type='absolute_range',
-                          crop_size=(384, 600),
-                          allow_negative_crop=True),
-                      dict(
-                          type='Resize',
-                          img_scale=[(480, 1333), (512, 1333), (544, 1333),
-                                     (576, 1333), (608, 1333), (640, 1333),
-                                     (672, 1333), (704, 1333), (736, 1333),
-                                     (768, 1333), (800, 1333)],
-                          multiscale_mode='value',
-                          override=True,
-                          keep_ratio=True)
-                  ]]),
-    dict(type='Normalize', **img_norm_cfg),
+    dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
     dict(type='Pad', size_divisor=32),
-     dict(
+    dict(
         type='Albu',
         transforms=albu_train_transforms,
         bbox_params=dict(
@@ -112,6 +67,7 @@ train_pipeline = [
         },
         update_pad_shape=False,
         skip_img_without_anno=True),
+    dict(type='Normalize', **img_norm_cfg),
     dict(type='DefaultFormatBundle'),
     dict(
         type='Collect',

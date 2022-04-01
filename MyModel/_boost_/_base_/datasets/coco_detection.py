@@ -5,7 +5,7 @@ classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass",
            "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
-img_scale=(512,512)
+img_scale=(1024,1024)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -51,4 +51,4 @@ data = dict(
         ann_file=data_root + 'test.json',
         img_prefix=data_root,
         pipeline=test_pipeline))
-evaluation = dict(interval=1, metric='bbox',save_best='bbox_mAP_50')
+evaluation = dict(interval=1, metric='bbox',save_best='bbox_mAP_50',classwise=True)

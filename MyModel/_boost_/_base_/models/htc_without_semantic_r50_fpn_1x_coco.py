@@ -1,6 +1,6 @@
 # _base_ = [
-#     '../_base_/datasets/coco_instance.py',
-#     '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
+#     '../_base_/datasets/coco_detection_custom.py',
+#     '../_base_/schedules/schedule_1x_custom.py', '../_base_/default_runtime_custom.py'
 # ]
 # model settings
 model = dict(
@@ -36,10 +36,12 @@ model = dict(
         loss_cls=dict(
             type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
         loss_bbox=dict(type='SmoothL1Loss', beta=1.0 / 9.0, loss_weight=1.0)),
+        # loss_bbox=dict(type='DIoULoss', loss_weight=1.0)),
+        # loss_bbox=dict(type='BalancedL1Loss')),
     roi_head=dict(
         type='HybridTaskCascadeRoIHead',
         interleaved=True,
-        mask_info_flow=False,
+        mask_info_flow=True,
         num_stages=3,
         stage_loss_weights=[1, 0.5, 0.25],
         bbox_roi_extractor=dict(
@@ -65,6 +67,8 @@ model = dict(
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0,
                                loss_weight=1.0)),
+                # loss_bbox=dict(type='BalancedL1Loss')),
+                # loss_bbox=dict(type='DIoULoss', loss_weight=1.0)),
             dict(
                 type='Shared2FCBBoxHead',
                 in_channels=256,
@@ -82,6 +86,8 @@ model = dict(
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0,
                                loss_weight=1.0)),
+                # loss_bbox=dict(type='BalancedL1Loss')),
+                # loss_bbox=dict(type='DIoULoss', loss_weight=1.0)),
             dict(
                 type='Shared2FCBBoxHead',
                 in_channels=256,
@@ -97,7 +103,9 @@ model = dict(
                     type='CrossEntropyLoss',
                     use_sigmoid=False,
                     loss_weight=1.0),
-                loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0))
+                loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0)),
+                # loss_bbox=dict(type='BalancedL1Loss')),
+                # loss_bbox=dict(type='DIoULoss', loss_weight=1.0)),
         ],
         # mask_roi_extractor=dict(
         #     type='SingleRoIExtractor',
@@ -130,7 +138,8 @@ model = dict(
         #         num_classes=80,
         #         loss_mask=dict(
         #             type='CrossEntropyLoss', use_mask=True, loss_weight=1.0))
-        # ]),
+        # ]
+        ),
     # model training and testing settings
     train_cfg=dict(
         rpn=dict(
@@ -168,7 +177,7 @@ model = dict(
                     pos_fraction=0.25,
                     neg_pos_ub=-1,
                     add_gt_as_proposals=True),
-                # mask_size=28,
+                mask_size=28,
                 pos_weight=-1,
                 debug=False),
             dict(
@@ -184,7 +193,7 @@ model = dict(
                     pos_fraction=0.25,
                     neg_pos_ub=-1,
                     add_gt_as_proposals=True),
-                # mask_size=28,
+                mask_size=28,
                 pos_weight=-1,
                 debug=False),
             dict(
@@ -212,11 +221,16 @@ model = dict(
             min_bbox_size=0),
         rcnn=dict(
             score_thr=0.001,
-            nms=dict(type='nms', iou_threshold=0.5),
+            # nms=dict(type='nms', iou_threshold=0.5),
+            nms=dict(type='soft_nms', iou_threshold=0.5, min_score=0.05),
             max_per_img=100,
+            # mask_thr_binary=0.5
             )))
+            # rcnn test support - nms=dict(type='soft_nms', iou_threshold=0.5, min_score=0.05)
+
 # img_norm_cfg = dict(
 #     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+
 # test_pipeline = [
 #     dict(type='LoadImageFromFile'),
 #     dict(
