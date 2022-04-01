@@ -67,12 +67,12 @@ class ConvNeXt(nn.Module):
         layer_scale_init_value (float): Init value for Layer Scale. Default: 1e-6.
         head_init_scale (float): Init scaling value for classifier weights and biases. Default: 1.
     """
-    def __init__(self, in_chans=3, depths=[3, 3, 9, 3], dims=[96, 192, 384, 768], 
+    def __init__(self, in_chans=3, depths=[3, 3, 27, 3], dims=[192, 384, 768, 1536], 
                  drop_path_rate=0., layer_scale_init_value=1e-6, out_indices=[0, 1, 2, 3],
-                 pretrained = None):
+                 init_cfg=None):
         super().__init__()
-        print("**********************생성*************************")
-        self.init_weights(pretrained)
+        print("**************************생성생성생성********************************")
+        self.init_cfg =init_cfg
         self.downsample_layers = nn.ModuleList() # stem and 3 intermediate downsampling conv layers
         stem = nn.Sequential(
             nn.Conv2d(in_chans, dims[0], kernel_size=4, stride=4),
@@ -106,6 +106,7 @@ class ConvNeXt(nn.Module):
             self.add_module(layer_name, layer)
 
         self.apply(self._init_weights)
+        
 
     def _init_weights(self, m):
         if isinstance(m, (nn.Conv2d, nn.Linear)):
@@ -128,12 +129,12 @@ class ConvNeXt(nn.Module):
                 nn.init.constant_(m.bias, 0)
                 nn.init.constant_(m.weight, 1.0)
 
-        if isinstance(pretrained, str):
+        if self.init_cfg is not None:
             self.apply(_init_weights)
             logger = get_root_logger()
-            print("****************************************model pth****************************************")
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
+            print("**************************pth 다운로드********************************")
+            load_checkpoint(self,self.init_cfg.checkpoint , strict=False, logger=logger)
+        elif self.init_cfg is None:
             self.apply(_init_weights)
         else:
             raise TypeError('pretrained must be a str or None')
