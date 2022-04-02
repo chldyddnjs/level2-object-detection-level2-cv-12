@@ -4,16 +4,22 @@ import numpy as np
 from pycocotools.coco import COCO
 from ImgShow import *
 
+root = '/opt/ml/level2-object-detection-level2-cv-12/MyModel/_boost_/ensembleData/'
 # ensemble csv files
-submission_files = ['/opt/ml/detection/baseline/mmdetection/configs/_boost_/ensembleData/cascade_swinB.csv',
-                   '/opt/ml/detection/baseline/mmdetection/configs/_boost_/ensembleData/htc_swin_large_2x_resize1024_aug_submission_15.csv',
-                   '/opt/ml/detection/baseline/mmdetection/configs/_boost_/ensembleData/htc_swin_large_aug.csv'] # submission lists
+submission_files = [
+                   f'{root}cascade_swinB.csv',
+                   f'{root}htc_swin_large_2x_resize1024_aug_submission_15.csv',
+                   f'{root}htc_swin_large_aug.csv',
+                   f'{root}cascade_convNeXt.csv',
+                   f'{root}cascade_convNeXt1.csv',
+                   f'{root}submission_ensemble_WBF.csv',
+                   f'{root}submission_ensemble_WBF1.csv',
+                   ] # submission lists
 submission_df = [pd.read_csv(file) for file in submission_files]
-
 image_ids = submission_df[0]['image_id'].tolist()
 
 # ensemble 할 file의 image 정보를 불러오기 위한 json
-annotation = '../../dataset/test.json'
+annotation = '/opt/ml/detection/dataset/test.json'
 coco = COCO(annotation)
 
 prediction_strings = []
@@ -22,7 +28,7 @@ file_names = []
 iou_thr = 0.55
 skip_box_thr = 0.1
 sigma = 0.1
-
+weights = [2,1]
 # 각 image id 별로 submission file에서 box좌표 추출
 for i, image_id in enumerate(image_ids):
     prediction_string = ''
@@ -65,6 +71,6 @@ for i, image_id in enumerate(image_ids):
 submission = pd.DataFrame()
 submission['PredictionString'] = prediction_strings
 submission['image_id'] = file_names
-submission.to_csv('/opt/ml/detection/baseline/mmdetection/configs/_boost_/ensembleData/submission_ensemble_WBF1.csv',index=False)
+submission.to_csv('/opt/ml/level2-object-detection-level2-cv-12/MyModel/_boost_/ensembleData/submission_ensemble_WBF3.csv',index=False)
 
 submission.head()
