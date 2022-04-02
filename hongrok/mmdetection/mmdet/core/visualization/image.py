@@ -347,7 +347,8 @@ def imshow_det_bboxes(img,
                 horizontal_alignment=horizontal_alignment)
 
     plt.imshow(img)
-
+    n = np.random.rand()
+    plt.savefig(f'img_samples/________img_{n}.jpg')
     stream, _ = canvas.print_to_buffer()
     buffer = np.frombuffer(stream, dtype='uint8')
     img_rgba = buffer.reshape(height, width, 4)

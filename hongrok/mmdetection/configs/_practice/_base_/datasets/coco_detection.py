@@ -13,8 +13,13 @@ train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='RandomCrop',
+        crop_type='absolute_range',
+        crop_size=(512, 512),
+        allow_negative_crop=True),    
     dict(type='Resize',
-        img_scale=[(1024, 1024)],
+        img_scale=[(800, 800)],
         ratio_range=(0.5, 1.5),
         # multiscale_mode='range',
         keep_ratio=True), #이미지에 맞게 변경
@@ -57,10 +62,7 @@ train_pipeline = [
                 label_fields=['gt_labels'],
                 min_visibility=0.2,
                 filter_lost_elements=True),
-            keymap={
-                'img': 'image',
-                'gt_bboxes': 'bboxes'
-            },
+            keymap=dict(img='image', gt_bboxes='bboxes'),
             update_pad_shape=False,
             skip_img_without_anno=True),
     #######################################################################
@@ -85,7 +87,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=1, #batch size
+    samples_per_gpu=2, #batch size
     workers_per_gpu=2, # num of worker
     train=dict(
         type=dataset_type,

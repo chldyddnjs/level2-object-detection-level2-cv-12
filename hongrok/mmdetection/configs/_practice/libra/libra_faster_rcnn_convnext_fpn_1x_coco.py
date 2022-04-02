@@ -13,31 +13,43 @@ model = dict(
     #     init_cfg=dict(
     #         type='Pretrained', checkpoint='open-mmlab://resnext101_64x4d'))
     # 
+
+    # #tiny
     # backbone=dict(
-    #     #base
-    #     backbone=dict(
     #     type='ConvNeXt',
-    #     pretrained= 'https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_224.pth',
+    #     pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_tiny_1k_224.pth',
     #     in_chans=3,
-    #     depths=[3, 3, 27, 3], 
-    #     dims=[128, 256, 512, 1024], 
-    #     drop_path_rate=0.6,
+    #     depths=[3, 3, 9, 3], 
+    #     dims=[96, 192, 384, 768], 
+    #     drop_path_rate=0.4,
     #     layer_scale_init_value=1.0,
     #     out_indices=[0, 1, 2, 3],
-    #     ),
+    # ),
+    # neck=dict(in_channels=[96, 192, 384, 768]),
+    #     #base
+    backbone=dict(
+        type='ConvNeXt',
+        pretrained= 'https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_224.pth',
+        in_chans=3,
+        depths=[3, 3, 27, 3], 
+        dims=[128, 256, 512, 1024], 
+        drop_path_rate=0.2,
+        layer_scale_init_value=1e-6,
+        out_indices=[0, 1, 2, 3],
+        ),
     #     neck=dict(in_channels=[128, 256, 512, 1024]),
 
         #large
-    backbone=dict(
-        type='ConvNeXt', 
-        pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_large_22k_224.pth',
-        in_chans=3,
-        depths=[3, 3, 27, 3], 
-        dims=[192, 384, 768, 1536], 
-        drop_path_rate=0.7,
-        layer_scale_init_value=1.0,
-        out_indices=[0, 1, 2, 3],
-        ),
+    # backbone=dict(
+    #     type='ConvNeXt', 
+    #     pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_large_22k_224.pth',
+    #     in_chans=3,
+    #     depths=[3, 3, 27, 3], 
+    #     dims=[192, 384, 768, 1536], 
+    #     drop_path_rate=0.7,
+    #     layer_scale_init_value=1.0,
+    #     out_indices=[0, 1, 2, 3],
+    #     ),
         # neck=dict(in_channels=[192, 384, 768, 1536]),
         
         # #x-large

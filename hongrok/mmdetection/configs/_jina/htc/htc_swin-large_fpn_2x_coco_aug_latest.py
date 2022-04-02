@@ -47,8 +47,8 @@ model = dict(
         type='HybridTaskCascadeRoIHead',
         interleaved=True,
         mask_info_flow=True,
-        num_stages=3,
-        stage_loss_weights=[1, 0.5, 0.25],
+        num_stages=4,
+        stage_loss_weights=[1, 0.5, 0.25, 0.125],
         bbox_roi_extractor=dict(
             type='SingleRoIExtractor',
             roi_layer=dict(type='RoIAlign', output_size=7, sampling_ratio=0),
@@ -72,6 +72,23 @@ model = dict(
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0,
                                loss_weight=1.0)),
+                        dict(
+                type='Shared2FCBBoxHead',
+                in_channels=256,
+                fc_out_channels=1024,
+                roi_feat_size=7,
+                num_classes=10,
+                bbox_coder=dict(
+                    type='DeltaXYWHBBoxCoder',
+                    target_means=[0.0, 0.0, 0.0, 0.0],
+                    target_stds=[0.1, 0.1, 0.2, 0.2]),
+                reg_class_agnostic=True,
+                loss_cls=dict(
+                    type='CrossEntropyLoss',
+                    use_sigmoid=False,
+                    loss_weight=1.0),
+                loss_bbox=dict(type='SmoothL1Loss', beta=1.0,
+                               loss_weight=1.0)), 
             dict(
                 type='Shared2FCBBoxHead',
                 in_channels=256,
@@ -104,7 +121,7 @@ model = dict(
                     type='CrossEntropyLoss',
                     use_sigmoid=False,
                     loss_weight=1.0),
-                loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0))
+                loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0)),
         ]),
     train_cfg=dict(
         rpn=dict(
@@ -159,6 +176,21 @@ model = dict(
                     neg_pos_ub=-1,
                     add_gt_as_proposals=True),
                 mask_size=28,
+                pos_weight=-1,
+                debug=False),
+            dict(
+                assigner=dict(
+                    type='MaxIoUAssigner',
+                    pos_iou_thr=0.7,
+                    neg_iou_thr=0.7,
+                    min_pos_iou=0.7,
+                    ignore_iof_thr=-1),
+                sampler=dict(
+                    type='RandomSampler',
+                    num=512,
+                    pos_fraction=0.25,
+                    neg_pos_ub=-1,
+                    add_gt_as_proposals=True),
                 pos_weight=-1,
                 debug=False),
             dict(
@@ -473,8 +505,8 @@ log_config = dict(
                             type='HybridTaskCascadeRoIHead',
                             interleaved=True,
                             mask_info_flow=True,
-                            num_stages=3,
-                            stage_loss_weights=[1, 0.5, 0.25],
+                            num_stages=4,
+                            stage_loss_weights=[1, 0.5, 0.25, 0.125],
                             bbox_roi_extractor=dict(
                                 type='SingleRoIExtractor',
                                 roi_layer=dict(
@@ -484,6 +516,27 @@ log_config = dict(
                                 out_channels=256,
                                 featmap_strides=[4, 8, 16, 32]),
                             bbox_head=[
+                                dict(
+                                    type='Shared2FCBBoxHead',
+                                    in_channels=256,
+                                    fc_out_channels=1024,
+                                    roi_feat_size=7,
+                                    num_classes=10,
+                                    bbox_coder=dict(
+                                        type='DeltaXYWHBBoxCoder',
+                                        target_means=[0.0, 0.0, 0.0, 0.0],
+                                        target_stds=[
+                                            0.1, 0.1, 0.2, 0.2
+                                        ]),
+                                    reg_class_agnostic=True,
+                                    loss_cls=dict(
+                                        type='CrossEntropyLoss',
+                                        use_sigmoid=False,
+                                        loss_weight=1.0),
+                                    loss_bbox=dict(
+                                        type='SmoothL1Loss',
+                                        beta=1.0,
+                                        loss_weight=1.0)),
                                 dict(
                                     type='Shared2FCBBoxHead',
                                     in_channels=256,
@@ -542,7 +595,7 @@ log_config = dict(
                                     loss_bbox=dict(
                                         type='SmoothL1Loss',
                                         beta=1.0,
-                                        loss_weight=1.0))
+                                        loss_weight=1.0)),
                             ]),
                         train_cfg=dict(
                             rpn=dict(
@@ -597,6 +650,21 @@ log_config = dict(
                                         neg_pos_ub=-1,
                                         add_gt_as_proposals=True),
                                     mask_size=28,
+                                    pos_weight=-1,
+                                    debug=False),
+                                dict(
+                                    assigner=dict(
+                                        type='MaxIoUAssigner',
+                                        pos_iou_thr=0.7,
+                                        neg_iou_thr=0.7,
+                                        min_pos_iou=0.7,
+                                        ignore_iof_thr=-1),
+                                    sampler=dict(
+                                        type='RandomSampler',
+                                        num=512,
+                                        pos_fraction=0.25,
+                                        neg_pos_ub=-1,
+                                        add_gt_as_proposals=True),
                                     pos_weight=-1,
                                     debug=False),
                                 dict(

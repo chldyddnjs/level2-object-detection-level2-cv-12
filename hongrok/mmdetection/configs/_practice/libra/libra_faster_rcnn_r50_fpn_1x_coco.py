@@ -10,7 +10,7 @@ model = dict(
         dict(
             type='FPN',
             # in_channels=[256, 512, 1024, 2048],
-            in_channels=[192, 384, 768, 1536],
+            in_channels=[128, 256, 512, 1024],
             out_channels=256,
             num_outs=5),
         dict(

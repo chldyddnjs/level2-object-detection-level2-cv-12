@@ -18,31 +18,40 @@ model = dict(
     #     init_cfg=dict(
     #         type='Pretrained', checkpoint='open-mmlab://resnext101_64x4d')
     #         )
-
-    #large
+    #tiny
     backbone=dict(
-        type='ConvNeXt', 
+        type='ConvNeXt',
+        pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_tiny_1k_224.pth',
         in_chans=3,
-        depths=[3, 3, 27, 3], 
-        dims=[192, 384, 768, 1536], 
-        drop_path_rate=0.7,
+        depths=[3, 3, 9, 3], 
+        dims=[96, 192, 384, 768], 
+        drop_path_rate=0.4,
         layer_scale_init_value=1.0,
         out_indices=[0, 1, 2, 3],
-        init_cfg=dict(
-            type='Pretrained', checkpoint='https://dl.fbaipublicfiles.com/convnext/convnext_large_22k_224.pth')
-        ),
-        neck=dict(in_channels=[192, 384, 768, 1536]),
-    # # x-large
+    ),
+    neck=dict(in_channels=[96, 192, 384, 768]),
+    # #large
     # backbone=dict(
     #     type='ConvNeXt', 
+    #     pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_large_22k_224.pth',
+    #     in_chans=3,
+    #     depths=[3, 3, 27, 3], 
+    #     dims=[192, 384, 768, 1536], 
+    #     drop_path_rate=0.7,
+    #     layer_scale_init_value=1.0,
+    #     out_indices=[0, 1, 2, 3],
+    # ),
+    # neck=dict(in_channels=[192, 384, 768, 1536]),
+    # # x-large
+    # backbone=dict(
+    #     type='ConvNeXt',
+        #   pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth',
     #     in_chans=3,
     #     depths=[3, 3, 27, 3], 
     #     dims=[256, 512, 1024, 2048], 
     #     drop_path_rate=0.8,
     #     layer_scale_init_value=1.0,
     #     out_indices=[0, 1, 2, 3],
-    #     init_cfg=dict(
-    #         type='Pretrained', checkpoint='https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth')
-    #     ),
-    #     neck=dict(in_channels=[256, 512, 1024, 2048]),
+    # ),
+    # neck=dict(in_channels=[256, 512, 1024, 2048]),
 )

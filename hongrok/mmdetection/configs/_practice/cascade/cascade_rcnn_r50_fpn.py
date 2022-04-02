@@ -40,7 +40,7 @@ model = dict(
         loss_bbox=dict(type='SmoothL1Loss', beta=1.0 / 9.0, loss_weight=1.0)),
     roi_head=dict(
         type='CascadeRoIHead',
-        num_stages=5,
+        num_stages=4,
         stage_loss_weights=[1, 0.5, 0.25, 0.125],
         bbox_roi_extractor=dict(
             type='SingleRoIExtractor',
