@@ -2,24 +2,35 @@ _base_ = [
     '../_base_/datasets/coco_detection.py',
     '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
 ]
-num_stages = 6
+num_stages = 6 
 num_proposals = 300
+fp16 = dict(loss_scale=dict(init_scale=512))
 model = dict(
     type='SparseRCNN',
     backbone=dict(
-        type='ResNet',
-        depth=50,
-        num_stages=4,
+        type='SwinTransformer',
+        embed_dims=96,
+        depths=[2, 2, 18, 2],
+        num_heads=[3, 6, 12, 24],
+        window_size=7,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.,
+        attn_drop_rate=0.,
+        drop_path_rate=0.2,
+        patch_norm=True,
         out_indices=(0, 1, 2, 3),
-        frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=True),
-        norm_eval=True,
-        style='pytorch',
-        # init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')
+        with_cp=False,
+        convert_weights=True,
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_small_patch4_window7_224.pth')
         ),
     neck=dict(
         type='FPN',
-        in_channels=[256, 512, 1024, 2048],
+        in_channels=[96, 192, 384, 768],
         out_channels=256,
         start_level=0,
         add_extra_convs='on_input',
@@ -37,16 +48,16 @@ model = dict(
             type='SingleRoIExtractor',
             roi_layer=dict(type='RoIAlign', output_size=7, sampling_ratio=2),
             out_channels=256,
-            featmap_strides=[4, 8, 16, 32]),
+            featmap_strides=[4, 8, 16, 32, 64]), #64추가
         bbox_head=[
             dict(
                 type='DIIHead',
                 num_classes=10,
-                num_ffn_fcs=2,
+                num_ffn_fcs=2, 
                 num_heads=8,
                 num_cls_fcs=1,
-                num_reg_fcs=3,
-                feedforward_channels=2048,
+                num_reg_fcs=2,
+                feedforward_channels=512,  #2048->512변경
                 in_channels=256,
                 dropout=0.0,
                 ffn_act_cfg=dict(type='ReLU', inplace=True),
@@ -92,5 +103,5 @@ model = dict(
 optimizer = dict(_delete_=True, type='AdamW', lr=0.000025, weight_decay=0.0001)
 optimizer_config = dict(_delete_=True, grad_clip=dict(max_norm=1, norm_type=2))
 # learning policy
-# lr_config = dict(policy='step', step=[27, 33])
+# lr_config = dict(policy='step', step=[10, 27, 33])
 # runner = dict(type='EpochBasedRunner', max_epochs=36)

@@ -2,24 +2,35 @@ _base_ = [
     '../_base_/datasets/coco_detection.py',
     '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
 ]
-num_stages = 6
+num_stages = 6 
 num_proposals = 300
 model = dict(
     type='SparseRCNN',
+    # backbone=dict(
+    #     type='ResNet',
+    #     depth=50,
+    #     num_stages=4,
+    #     out_indices=(0, 1, 2, 3),
+    #     frozen_stages=1,
+    #     norm_cfg=dict(type='BN', requires_grad=True),
+    #     norm_eval=True,
+    #     style='pytorch',
+    #     # init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')
+    #     ),
+    #small
     backbone=dict(
-        type='ResNet',
-        depth=50,
-        num_stages=4,
-        out_indices=(0, 1, 2, 3),
-        frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=True),
-        norm_eval=True,
-        style='pytorch',
-        # init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')
-        ),
+        type='ConvNeXt',
+        pretrained='https://dl.fbaipublicfiles.com/convnext/convnext_small_1k_224.pth',
+        in_chans=3,
+        depths=[3, 3, 27, 3], 
+        dims=[96, 192, 384, 768], 
+        drop_path_rate=0.6,
+        layer_scale_init_value=1.0,
+        out_indices=[0, 1, 2, 3],
+    ),
     neck=dict(
         type='FPN',
-        in_channels=[256, 512, 1024, 2048],
+        in_channels=[96, 192, 384, 768],
         out_channels=256,
         start_level=0,
         add_extra_convs='on_input',
@@ -46,7 +57,7 @@ model = dict(
                 num_heads=8,
                 num_cls_fcs=1,
                 num_reg_fcs=3,
-                feedforward_channels=2048,
+                feedforward_channels=2048, 
                 in_channels=256,
                 dropout=0.0,
                 ffn_act_cfg=dict(type='ReLU', inplace=True),
@@ -89,8 +100,8 @@ model = dict(
     test_cfg=dict(rpn=None, rcnn=dict(max_per_img=num_proposals)))
 
 # optimizer
-optimizer = dict(_delete_=True, type='AdamW', lr=0.000025, weight_decay=0.0001)
+optimizer = dict(_delete_=True, type='AdamW', lr=0.000025 / 1.4, weight_decay=0.0001)
 optimizer_config = dict(_delete_=True, grad_clip=dict(max_norm=1, norm_type=2))
 # learning policy
-# lr_config = dict(policy='step', step=[27, 33])
+# lr_config = dict(policy='step', step=[10, 27, 33])
 # runner = dict(type='EpochBasedRunner', max_epochs=36)

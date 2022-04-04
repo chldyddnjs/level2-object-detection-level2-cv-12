@@ -54,15 +54,18 @@ if __name__ == "__main__":
     # config_file = 'configs/_practice/libra/libra_faster_rcnn_convnext_fpn_1x_coco.py'
     # config_file = 'configs/_practice/cascade/cascade_rcnn_convnext_fpn_1x_coco.py'
     # config_file = 'configs/_jina/htc/htc_swin-large_fpn_2x_coco_aug_latest.py'
-    config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_r50.py'
+    # config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_convnext.py'
+    # config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_swinS.py'
+    # config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_pvt_v2_b2_fpn_300_proposals_crop_mstrain_480-800_3x_coco.py'
+    config_file = 'configs/_practice/cascade/cascade_mask_rcnn_pvt_v2_b2_fpn_3x_mstrain_fp16.py'
     basename = osp.basename(config_file).split('.')[0]
-    work_dir=f'work_dirs/{basename}' # 학습결과가 저장될 폴더
+    work_dir=f'work_dirs/{basename}/' # 학습결과가 저장될 폴더
     user_name='hongrok' # wandb에 올라갈 실험한 유저이름
-    fold_num=2 # 사용할 데이터 fold 번호
+    fold_num=0 # 사용할 데이터 fold 번호
     wandb_exp=basename # wandb에 올라갈 실험이름
-    epochs = 50 # 실행할 epochs
-    # pretrained = 'https://dl.fbaipublicfiles.com/convnext/coco/cascade_mask_rcnn_convnext_xlarge_22k_3x.pth'
-
+    epochs = 36 # 실행할 epochs
+    resume_from = None
+    # resume_from = '/opt/ml/detection/hongrok/mmdetection/work_dirs/sparse_rcnn_pvt_v2_b2_fpn_300_proposals_crop_mstrain_480-800_3x_coco/best_bbox_mAP_50_epoch_24.pth'
     if args.train:
         # train
         cmd =f'python tools/train.py {config_file}\
@@ -71,7 +74,10 @@ if __name__ == "__main__":
                 --fold_num {fold_num}\
                 --wandb_exp {wandb_exp}\
                 --epochs {epochs}'
+        if resume_from:
+            cmd += f' --resume-from {resume_from}'
         os.system(cmd)
+        # print(cmd)
 
     # inference
     if args.inference:

@@ -30,6 +30,16 @@ model = dict(
         out_indices=[0, 1, 2, 3],
     ),
     neck=dict(in_channels=[96, 192, 384, 768]),
+    # #small
+    # backbone=dict(
+    #     in_chans=3,
+    #     depths=[3, 3, 27, 3], 
+    #     dims=[96, 192, 384, 768], 
+    #     drop_path_rate=0.6,
+    #     layer_scale_init_value=1.0,
+    #     out_indices=[0, 1, 2, 3],
+    # ),
+    # neck=dict(in_channels=[96, 192, 384, 768]),
     # #large
     # backbone=dict(
     #     type='ConvNeXt', 

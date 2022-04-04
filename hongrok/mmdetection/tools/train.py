@@ -198,7 +198,7 @@ def main():
     meta['config'] = cfg.pretty_text
     # log some basic info
     logger.info(f'Distributed training: {distributed}')
-    logger.info(f'Config:\n{cfg.pretty_text}')
+    # logger.info(f'Config:\n{cfg.pretty_text}')
 
     # set random seeds
     seed = init_random_seed(args.seed)
