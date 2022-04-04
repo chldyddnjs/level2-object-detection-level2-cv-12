@@ -56,8 +56,8 @@ if __name__ == "__main__":
     # config_file = 'configs/_jina/htc/htc_swin-large_fpn_2x_coco_aug_latest.py'
     # config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_convnext.py'
     # config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_swinS.py'
-    # config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_pvt_v2_b2_fpn_300_proposals_crop_mstrain_480-800_3x_coco.py'
-    config_file = 'configs/_practice/cascade/cascade_mask_rcnn_pvt_v2_b2_fpn_3x_mstrain_fp16.py'
+    config_file = 'configs/_practice/sparseRCNN/sparse_rcnn_pvt_v2_b2_fpn_300_proposals_crop_mstrain_480-800_3x_coco.py'
+    # config_file = 'configs/_practice/cascade/cascade_mask_rcnn_pvt_v2_b2_fpn_3x_mstrain_fp16.py'
     basename = osp.basename(config_file).split('.')[0]
     work_dir=f'work_dirs/{basename}/' # 학습결과가 저장될 폴더
     user_name='hongrok' # wandb에 올라갈 실험한 유저이름
