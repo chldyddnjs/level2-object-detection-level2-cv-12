@@ -15,14 +15,19 @@ python train.py --weights {pretraiend된 wieght 파일} --data trash.yaml --hyp 
 ```
 python detect.py --weights {best weight 파일} --source {test dataset 위치} --imgsz 1024 --data trash.yaml --conf-thres 0.08 --iou-thres 0.5 --name {폴더명} --save-txt --save-conf
 ```
+```bash
+├── data
+│   ├── 0001.jpg
+│   ├── 0002.jpg
+│   ├── 0003.jpg
+│   └── ...
+├── label
+│   ├── 0001.txt
+│   ├── 0002.txt
+│   ├── 0003.txt
+│   └── ...
 
-├── detect test folder                   
-    ├── 0000.txt                
-    ├── 0001.txt                 
-    ├── 0002.txt                
-    ├── 0003.txt            
-    ├── 0004.txt
-    └── '''
+``` 
 
 
 
