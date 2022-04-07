@@ -71,9 +71,9 @@ EfficientDet을 사용하면서 loss가 적은 것과 loss가 상대적으로 �
 # scheduler
 <li>stepLR</li>
 <li>cosinAnealing</li>
+stepLR과 cosinAnealing을 두고 실험을 한 결과 모든 실험에 대해서 cosinAnealing이 더 성능이 더 뛰어났다.
 
-
-느낀점 
+느낀점
 mmdetection 기준으로 최대한 다양한 모델을 사용해보려고 노력했지만 이론적으로 굉장히 좋다고 생각되는 모델들이 오히려 안좋다고 생각한 모델들 보다 성능이 떨어지는 결과를 보고
 task에 따라 적절한 detector model이 존재한다고 느꼈다.
 backbone으로는 transformer,convnext가 가장 적절했으며 나머지(resnet,darknet)는 좋은 성능을 내지 못했다.
@@ -84,6 +84,7 @@ augmentation이 만능은 아닌것 같고 모델에 맞는 task에 맞는 augme
 
 
 아쉬운점
+체계적으로 실험을 구상하고 행동으로 옮긴다는 생각을 가지고 있었지만 제대로 이루어지지 않았다.
 다른 팀원들의 실험 내용을 다 알지 못했고 팀에 기여도가 낮다고 느꼈다.
 대회를 진행하면서 도움을 주기보다는 도움을 많이 받았다.
 EDA를 해봤지만 클래스의 불균형이 있다는 것만 확인을 하였고 팀원이 만들어준 코드를 통해 이미지 내에서 bbox를 시각화 할 수있었다.
