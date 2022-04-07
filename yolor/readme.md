@@ -1,4 +1,4 @@
-# yolov5
+# yolor
 ------------
 | Validation set mAP 50 | LB Score |
 | --------------------- | -------- |
