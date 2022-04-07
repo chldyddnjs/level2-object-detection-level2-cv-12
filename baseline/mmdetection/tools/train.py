@@ -79,6 +79,9 @@ def parse_args():
         default='none',
         help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
+    parser.add_argument('--foldnum',type=int)
+    parser.add_argument('--wandbname',type=str)
+    parser.add_argument('--epoch',type = int)
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -103,7 +106,25 @@ def main():
 
     # set multi-process settings
     setup_multi_processes(cfg)
+    ############################code 추가##################################################################
+    cfg.log_config = dict(
+        interval = 50,
+        hooks = [
+            dict(type='TextLoggerHook'),
+            dict(type='WandbLoggerHook',
+                init_kwargs = dict(project='detection',
+                                    entity='yolo12',
+                                    name = 'ksh_'+'fold'+str(args.foldnum)+"_"+args.wandbname,
+                                    config = dict(cfg)
+                )
+            )
+                            
+        ])
+    cfg.data.train.ann_file = '/opt/ml/detection/dataset/fold_' +str(args.foldnum) + "_train.json"
+    cfg.data.val.ann_file = '/opt/ml/detection/dataset/fold_' +str(args.foldnum) + "_val.json" 
+    cfg.runner.max_epochs = args.epoch
 
+    ######################################################################################################
     # set cudnn_benchmark
     if cfg.get('cudnn_benchmark', False):
         torch.backends.cudnn.benchmark = True
@@ -115,7 +136,7 @@ def main():
     elif cfg.get('work_dir', None) is None:
         # use config filename as default work_dir if cfg.work_dir is None
         cfg.work_dir = osp.join('./work_dirs',
-                                osp.splitext(osp.basename(args.config))[0])
+                                osp.splitext(osp.basename(args.config))[0],str(args.foldnum))
     if args.resume_from is not None:
         cfg.resume_from = args.resume_from
     cfg.auto_resume = args.auto_resume

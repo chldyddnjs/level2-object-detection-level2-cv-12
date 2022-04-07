@@ -1,23 +1,24 @@
 _base_ = [
-    '../_base_/datasets/coco_detection.py',
+    '../_base_/datasets/coco_detection_aug.py',
     '../_base_/default_runtime.py'
 ]
 # model settings
-pretrained = 'https://dl.fbaipublicfiles.com/convnext/convnext_large_22k_224.pth'  # noqa
+pretrained = 'https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_1k_384.pth'  # noqa
+
 model = dict(
     type='CascadeRCNN',
     backbone=dict(
         type='ConvNeXt',
         in_chans=3,
         depths=[3, 3, 27, 3], 
-        dims=[192, 384, 768, 1536], 
+        dims=[128, 256, 512, 1024], 
         drop_path_rate=0.2,
         layer_scale_init_value=1e-6,
         out_indices=[0, 1, 2, 3],
         init_cfg=dict(type='Pretrained', checkpoint=pretrained)),
     neck=dict(
         type='FPN',
-        in_channels=[192, 384, 768, 1536],
+        in_channels=[128, 256, 512, 1024],
         out_channels=256,
         num_outs=5),
     rpn_head=dict(
@@ -188,7 +189,6 @@ optimizer = dict(type='AdamW', lr=lr, weight_decay=0.01)
 optimizer_config = dict(
     grad_clip=dict(max_norm=10, norm_type=2))
 lr_config = dict(
-    
     policy='CosineAnnealing',
     warmup='linear',
     warmup_iters=300,
