@@ -23,20 +23,6 @@ alb_transform = [
     dict(
         type='OneOf',
         transforms=[
-            dict(
-                type='GaussNoise',
-                p=1.0),
-            dict(
-                type='GaussianBlur',
-                p=1.0),
-            dict(
-                type='Blur',
-                p=1.0)
-        ],
-        p=0.1),
-    dict(
-        type='OneOf',
-        transforms=[
             # dict(
             #     type='CLAHE',
             #     p=1.0),
@@ -131,4 +117,4 @@ data = dict(
         img_prefix=data_root ,
         pipeline=test_pipeline))
 
-evaluation = dict(interval=1, metric='bbox',save_best='bbox_mAP_50')
+evaluation = dict(interval=1, metric='bbox',save_best='bbox_mAP_50',classwise=True)
