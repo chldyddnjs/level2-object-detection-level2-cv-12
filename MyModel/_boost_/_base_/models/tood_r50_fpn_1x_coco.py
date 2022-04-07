@@ -1,20 +1,19 @@
-# _base_ = [
-#     '/opt/ml/detection/baseline/mmdetection/configs/_boost_/_base_/datasets/coco_detection_aug.py',
-#     '/opt/ml/detection/baseline/mmdetection/configs/_boost_/_base_/schedules/schedule_1x.py',
-#     '/opt/ml/detection/baseline/mmdetection/configs/_boost_/_base_/default_runtime.py'
-# ]
+#_base_ = [
+#    '../_base_/datasets/coco_detection.py',
+#    '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
+#]
 model = dict(
     type='TOOD',
-    backbone=dict(
-        type='ResNet',
-        depth=50,
-        num_stages=4,
-        out_indices=(0, 1, 2, 3),
-        frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=True),
-        norm_eval=True,
-        style='pytorch',
-        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
+    #backbone=dict(
+    #    type='ResNet',
+    #    depth=50,
+    #    num_stages=4,
+    #    out_indices=(0, 1, 2, 3),
+    #    frozen_stages=1,
+    #    norm_cfg=dict(type='BN', requires_grad=True),
+    #    norm_eval=True,
+    #    style='pytorch',
+    #    init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
     neck=dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
@@ -69,7 +68,7 @@ model = dict(
         nms=dict(type='nms', iou_threshold=0.6),
         max_per_img=100))
 # optimizer
-# optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
+##optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
 
 # custom hooks
-# custom_hooks = [dict(type='SetEpochInfoHook')]
+#custom_hooks = [dict(type='SetEpochInfoHook')]
