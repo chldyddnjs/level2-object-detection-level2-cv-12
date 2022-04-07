@@ -8,8 +8,6 @@
 여러분에 의해 만들어진 우수한 성능의 모델은 쓰레기장에 설치되어 정확한 분리수거를 돕거나, 어린아이들의 분리수거 교육 등에 사용될 수 있을 것입니다. 부디 지구를 위기로부터 구해주세요! 🌎
 
 
-# Solution
-
 !cd /opt/ml/detection/baseline/mmedetction
 conda activate detection
 
@@ -22,7 +20,7 @@ python tools/train.py {path/to/file}
 python tools/test.py {path/to/file}
 
 
-# list up with configs for mmdetection
+# list up and configs for mmdetection
 
 <li>faster_rcnn</li>
 <li>cascade_rcnn with swin + [optinal]augmentation</li>
@@ -32,7 +30,7 @@ python tools/test.py {path/to/file}
 <li>yolox</li>
 <li>detr</li>
 
-# list up with configs for naive model from github or kaggle
+# list up and configs for naive model from github or kaggle
 <li>efficientdet</li>
 <li>DINO</li>
 
@@ -92,3 +90,4 @@ EDA를 해봤지만 클래스의 불균형이 있다는 것만 확인을 하였�
 
 # 앞으로 해야할 점
 실험을 덜 하더라도 논문을 완벽하게 읽자 하나의 모델을 완벽하게 알고 있어야 더 잘 활용할수 있기 때문이다.
+무작정 실험하지 말고 머릿속으로 개념을 알고 사용하자
