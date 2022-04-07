@@ -22,7 +22,6 @@ python detect.py --weights {best weight 파일} --source {test dataset 위치} -
     ├── 0002.txt                
     ├── 0003.txt            
     ├── 0004.txt
-    ├── 0005.txt
     └── ...
 
 
