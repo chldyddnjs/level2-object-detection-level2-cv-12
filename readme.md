@@ -24,53 +24,53 @@ python tools/test.py {path/to/file}
 
 # list up with configs for mmdetection
 
-faster_rcnn
-cascade_rcnn with swin + [optinal]augmentation
-htc with swin + [optional]augmentation
-tood with convnext + [optional]augmentation
-deformable detr
-yolox
-detr
+<li>faster_rcnn</li>
+<li>cascade_rcnn with swin + [optinal]augmentation</li>
+<li>htc with swin + [optional]augmentation</li>
+<li>tood with convnext + [optional]augmentation</li>
+<li>deformable detr</li>
+<li>yolox</li>
+<li>detr</li>
 
 # list up with configs for naive model from github or kaggle
-efficientdet
-DINO
+<li>efficientdet</li>
+<li>DINO</li>
 
 
 # experiment
-faster_rcnn -> 0.4010, epoch=12, max_epoch=12
-cascade_rcnn + -> 0.5825, epoch =12, max_epoch=12
-htc with swin -> 0.5567, epoch=12, max_epoch=12
-htc with swin + aug -> 0.5816, epoch=12, max_epoch=24 원래 24epoch까지 올라가야하지만 중간에 실수로 중간에 꺼버림
-detr -> 0.0000, epoch=100, max_epoch=150
-yolox -> 0.1034, epoch=100, max_epoch=300
-efficientdet ->, 0.3443 epoch=50, max_epoch=50
-efficientdet + aug -> 0.2431 epoch=50, max_epoch=50
-DINO -> 실험환경은 셋팅해놨지만 실험 x
-tood with convnext + aug -> 0.6171 epoch=12
-deformable detr -> cuda version 불일치로 실험 x
+<li>faster_rcnn -> 0.4010, epoch=12, max_epoch=12</li>
+<li>cascade_rcnn + -> 0.5825, epoch =12, max_epoch=12</li>
+<li>htc with swin -> 0.5567, epoch=12, max_epoch=12</li>
+<li>htc with swin + aug -> 0.5816, epoch=12, max_epoch=24 원래 24epoch까지 올라가야하지만 중간에 실수로 중간에 꺼버림</li>
+<li>detr -> 0.0000, epoch=100, max_epoch=150</li>
+<li>yolox -> 0.1034, epoch=100, max_epoch=300</li>
+<li>efficientdet ->, 0.3443 epoch=50, max_epoch=50</li>
+<li>efficientdet + aug -> 0.2431 epoch=50, max_epoch=50</li>
+<li>DINO -> 실험환경은 셋팅해놨지만 실험 x</li>
+<li>tood with convnext + aug -> 0.6171 epoch=12</li>
+<li>deformable detr -> cuda version 불일치로 실험 x</li>
 
 # augmentation
-사용한 augmentation은 one of {
+<li>사용한 augmentation은 one of {
 [brightness,contrest],
 [RGB Shift, Imag Roate],
 [bulr, medium blur]
 }
-를 사용했으며 일반화 성능을 높여줄 기대를 하며 위와 같은 기법을 사용했다.
-autoAug,mosaic,mixup 등의 기법을 사용하고 싶었지만 error를 처리하지 못해 사용하지 못했다.
+를 사용했으며 일반화 성능을 높여줄 기대를 하며 위와 같은 기법을 사용했다.</li>
+<li>autoAug,mosaic,mixup 등의 기법을 사용하고 싶었지만 error를 처리하지 못해 사용하지 못했다.</li>
 
 # loss
 EfficientDet을 사용하면서 loss가 적은 것과 loss가 상대적으로 큰것을 제출해봤을 때 당연한 얘기지만 성능의 차이가 꽤 컷다.
 
 # optimizer
 <li>adamW</li>
-sgd(momentom)
+<li>sgd(momentom)</li>
 
-모델에 따라 optimizer가 기본적으로 다르지만 일반적으로 adamW가 성능이 되게 좋았고 adamW가 loss를 잘 줄이지 못할 때 sgd를 쓰면 loss가 잘 줄어드는 현상도 볼 수 있었다.
+<li>모델에 따라 optimizer가 기본적으로 다르지만 일반적으로 adamW가 성능이 되게 좋았고 adamW가 loss를 잘 줄이지 못할 때 sgd를 쓰면 loss가 잘 줄어드는 현상도 볼 수 있었다.
 뭐든지 만능은 없다.
 # scheduler
-stepLR
-cosinAnealing
+<li>stepLR</li>
+<li>cosinAnealing</li>
 
 
 느낀점 
