@@ -1,0 +1,7 @@
+# train and val datasets (image directory or *.txt file with image paths)
+train : /opt/ml/detection/baseline/yolor/train.txt
+val : /opt/ml/detection/baseline/yolor/val.txt
+test : ./test.txt
+
+nc: 10
+names : ["General trash", "Paper", "Paper pack", "Metal", "Glass", "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing"]
