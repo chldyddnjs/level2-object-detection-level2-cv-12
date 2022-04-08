@@ -48,6 +48,7 @@ python tools/test.py {path/to/file}
 <li>cascade_rcnn_convnext_adamW_cosinAnealing_aug(0.6132) + </li>
 <li>cascade_rcnn_swin_adamW_aug_stepLR(0.5825) ]</li>
 <li>LB -> 0.6641 </li>
+
 # augmentation
 사용한 augmentation은 one of { [brightness,contrest,Hue,saturation], [RGB Shift, Image Roate], [bulr, medium blur] } 를 사용했으며 일반화 성능을 높여줄 기대를 하며 위와 같은 기법을 사용했다.
 일반화 성능을 조금더 높이기 위해
