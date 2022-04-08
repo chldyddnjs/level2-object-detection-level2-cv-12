@@ -22,24 +22,23 @@ python tools/test.py {path/to/file}
 
 # list up and configs for mmdetection
 
-<li>faster_rcnn</li>
-<li>cascade_rcnn with swin + [optinal]augmentation</li>
-<li>htc with swin + [optional]augmentation</li>
-<li>tood with convnext + [optional]augmentation</li>
-<li>deformable detr</li>
-<li>yolox</li>
-<li>detr</li>
+<li>[basic]faster_rcnn</li>
+<li>[basic]cascade_rcnn with swin + [optinal]augmentation + cosinAnealing + adamW</li>
+<li>[basic]htc with swin + [optional]augmentation + cosinAnealing + adamW</li>
+<li>[basic]tood with convnext + [optional]augmentation + cosinAnealing + adamW</li>
+<li>[basic]deformable detr</li>
+<li>[basic]yolox</li>
+<li>[basic]detr</li>
 
-# list up and configs for naive model from github or kaggle
+# list up and configs for naive model come from github or kaggle
 <li>efficientdet</li>
 <li>DINO</li>
-
 
 # experiment
 <li>faster_rcnn -> 0.4010, epoch=12, max_epoch=12</li>
 <li>cascade_rcnn + -> 0.5825, epoch =12, max_epoch=12</li>
 <li>htc with swin -> 0.5567, epoch=12, max_epoch=12</li>
-<li>htc with swin + aug -> 0.5816, epoch=12, max_epoch=24 원래 24epoch까지 올라가야하지만 중간에 실수로 중간에 꺼버림</li>
+<li>htc with swin + aug -> 0.5816, epoch=12, max_epoch=24 원래 24epoch까지 올라가야하지만 중간에 실수로 중간에 꺼짐</li>
 <li>detr -> 0.0000, epoch=100, max_epoch=150</li>
 <li>yolox -> 0.1034, epoch=100, max_epoch=300</li>
 <li>efficientdet ->, 0.3443 epoch=50, max_epoch=50</li>
@@ -47,11 +46,12 @@ python tools/test.py {path/to/file}
 <li>DINO -> 실험환경은 셋팅해놨지만 실험 x</li>
 <li>tood with convnext + aug -> 0.6171 epoch=12</li>
 <li>deformable detr -> cuda version 불일치로 실험 x</li>
+<li>ensemble htc_swin_adamW_aug_cosinAnealing + cascade_rcnn_convnext_adamW_cosinAnealing + cascade_rcnn_convnext_adamW + cascade_rcnn_swin_adamW_aug_stepLR -> 0.6440 -> 0.6641</li>
 
 # augmentation
 <li>사용한 augmentation은 one of {
-[brightness,contrest],
-[RGB Shift, Imag Roate],
+[brightness,contrest,Hue,saturation],
+[RGB Shift, Image Roate],
 [bulr, medium blur]
 }
 를 사용했으며 일반화 성능을 높여줄 기대를 하며 위와 같은 기법을 사용했다.</li>
@@ -72,23 +72,27 @@ python tools/test.py {path/to/file}
 <li>cosinAnealing</li>
 stepLR과 cosinAnealing을 두고 실험을 한 결과 모든 실험에 대해서 cosinAnealing이 더 성능이 더 뛰어났다.
 
+# 협업
+
+
 # 느낀점
-mmdetection 기준으로 최대한 다양한 모델을 사용해보려고 노력했지만 이론적으로 굉장히 좋다고 생각되는 모델들이 오히려 안좋다고 생각한 모델들 보다 성능이 떨어지는 결과를 보고
-task에 따라 적절한 detector model이 존재한다고 느꼈다.
-backbone으로는 transformer,convnext가 가장 적절했으며 나머지(resnet,darknet)는 좋은 성능을 내지 못했다.
-아마도 feature map을 뽑는데 있어서는 모델이 정해져있는것 같다.
-모든 모델에 같은 augmentation을 적용해보았지만 어떤 모델은 성능이 올라가고 나머지는 그렇지 못했다.
-augmentation이 만능은 아닌것 같고 모델에 맞는 task에 맞는 augmentation이 따로 존재하는것 같았다.
-그리고 대회를 진행하는데 있어 다양한 모델 with 어느정도의 성능이 나오는 모델을 WBF로 앙상블 했을 때 성능이 올라가는 것을 느꼈다.
+mmdetection 기준으로 최대한 다양한 모델을 사용해보려고 노력했지만 이론적으로 굉장히 좋다고 생각되는 모델들이 오히려 안좋다고 생각한 모델들 보다 성능이 떨어지는 결과를 보고 task에 따라 적절한 detector model이 존재한다고 느꼈습니다.
+backbone으로는 transformer,convnext가 가장 성능이 좋았으며 나머지(resnet,darknet,VGG16)backbone은 좋은 성능을 내지 못했습니다. (yolov5,yoloR 제외)
+feature map을 뽑는데 있어서는 모델이 정해져있는것 같은 느낌을 받았습니다.
+모든 모델에 같은 augmentation을 적용해보았지만 어떤 모델은 성능이 올라가고 나머지는 그렇지 못했습니다.
+augmentation이 만능은 아닌것 같고 모델에 맞는 task에 맞는 augmentation이 따로 존재합니다.
+그리고 대회를 진행하는데 있어 다양한 모델 with 어느정도의 성능이 나오는 모델을 WBF로 앙상블 했을 때 성능이 올라가는 것을 확인했습니다.
 
 
 # 아쉬운점
+mmdetection 사용법에 익숙해지는데 시간이 오래걸렸고 detr,DINO model의 backbone을 바꾸려고 시도했지만 결국엔 못바꾸고 시간만 버렸다.
 체계적으로 실험을 구상하고 행동으로 옮긴다는 생각을 가지고 있었지만 제대로 이루어지지 않았다.
 다른 팀원들의 실험 내용을 다 알지 못했고 팀에 기여도가 낮다고 느꼈다.
 대회를 진행하면서 도움을 주기보다는 도움을 많이 받았다.
-EDA를 해봤지만 클래스의 불균형이 있다는 것만 확인을 하였고 팀원이 만들어준 코드(by 진아님)를 통해 이미지 내에서 bbox를 시각화 할 수있었다.
-아직 인사이트가 부족해서 아 그렇구나라는 생각만 들고 대회를 진행함에 있어 EDA를 어떻게 적용해야 해야할지 몰랐다.
+EDA를 해봤지만 클래스의 불균형이 있다는 것만 확인을 하였고 팀원이 만들어준 코드(by 진아님)를 통해 이미지 내에서 bbox를 시각화 할 수있었지만 아직 인사이트가 부족해서 아 그렇구나라는 생각만 들고 대회를 진행함에 있어 EDA를 어떻게 적용해야 해야할지 몰랐습니다.
 
 # 앞으로 해야할 점
 실험을 덜 하더라도 논문을 완벽하게 읽자 하나의 모델을 완벽하게 알고 있어야 더 잘 활용할수 있기 때문이다.
-무작정 실험하지 말고 머릿속으로 개념을 알고 사용하자
+무작정 실험하지 말고 머릿속으로 개념을 알고 사용하자.
+협업의 관점에서 더 
+
