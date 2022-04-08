@@ -32,21 +32,21 @@ python tools/test.py {path/to/file}
 [basic] efficientdet
 [basic] DINO
 # experiment
-faster_rcnn -> 0.4010, epoch=12, max_epoch=12
-cascade_rcnn + -> 0.5825, epoch =12, max_epoch=12
-htc with swin -> 0.5567, epoch=12, max_epoch=12
-htc with swin + aug -> 0.5816, epoch=12, max_epoch=24 원래 24epoch까지 올라가야하지만 중간에 실수로 중간에 꺼짐
-detr -> 0.0000, epoch=100, max_epoch=150
-yolox -> 0.1034, epoch=100, max_epoch=300
-efficientdet ->, 0.3443 epoch=50, max_epoch=50
-efficientdet + aug -> 0.2431 epoch=50, max_epoch=50
-DINO -> (backbone을 vit -> swin으로 바꾸려고 시도한 실험)
-tood with convnext + aug -> 0.6171 epoch=12
-deformable detr -> cuda version 불일치로 실험 x
-ensemble =[ 
+<li>faster_rcnn -> 0.4010, epoch=12, max_epoch=12</li>
+<li>cascade_rcnn + -> 0.5825, epoch =12, max_epoch=12</li>
+<li>htc with swin -> 0.5567, epoch=12, max_epoch=12</li>
+<li>htc with swin + aug -> 0.5816, epoch=12, max_epoch=24 원래 24epoch까지 올라가야하지만 중간에 실수로 중간에 꺼짐</li>
+<li>detr -> 0.0000, epoch=100, max_epoch=150</li>
+<li>yolox -> 0.1034, epoch=100, max_epoch=300</li>
+<li>efficientdet ->, 0.3443 epoch=50, max_epoch=50</li>
+<li>efficientdet + aug -> 0.2431 epoch=50, max_epoch=50</li>
+<li>DINO -> (backbone을 vit -> swin으로 바꾸려고 시도한 실험)</li>
+<li>tood with convnext + aug -> 0.6171 epoch=12</li>
+<li>deformable detr -> cuda version 불일치로 실험 x</li>
+<li>ensemble =[ 
 htc_swin_adamW_aug_cosinAnealing(0.6272)  + cascade_rcnn_convnext_adamW_cosinAnealing(0.6070)  + 
 cascade_rcnn_convnext_adamW_cosinAnealing_aug(0.6132) + 
-cascade_rcnn_swin_adamW_aug_stepLR(0.5825) ] 
+cascade_rcnn_swin_adamW_aug_stepLR(0.5825) ] </li>
 LB -> 0.6641
 # augmentation
 사용한 augmentation은 one of { [brightness,contrest,Hue,saturation], [RGB Shift, Image Roate], [bulr, medium blur] } 를 사용했으며 일반화 성능을 높여줄 기대를 하며 위와 같은 기법을 사용했다.
