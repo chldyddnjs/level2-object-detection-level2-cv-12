@@ -1,0 +1,743 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.11
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.7.11
+    start_time: 1648602463
+    t:
+      1:
+      - 1
+      - 37
+      - 38
+      - 41
+      2:
+      - 1
+      - 37
+      - 38
+      - 41
+      3:
+      - 2
+      - 13
+      - 16
+      4: 3.7.11
+      5: 0.12.11
+      8:
+      - 5
+checkpoint_config:
+  desc: null
+  value:
+    interval: 1
+classes:
+  desc: null
+  value:
+  - General trash
+  - Paper
+  - Paper pack
+  - Metal
+  - Glass
+  - Plastic
+  - Styrofoam
+  - Plastic bag
+  - Battery
+  - Clothing
+custom_hooks:
+  desc: null
+  value:
+  - type: NumClassCheckHook
+data:
+  desc: null
+  value:
+    samples_per_gpu: 2
+    test:
+      ann_file: /opt/ml/detection/dataset/test.json
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: /opt/ml/detection/dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - flip: false
+        img_scale:
+        - 512
+        - 512
+        transforms:
+        - keep_ratio: true
+          type: Resize
+        - type: RandomFlip
+        - mean:
+          - 123.675
+          - 116.28
+          - 103.53
+          std:
+          - 58.395
+          - 57.12
+          - 57.375
+          to_rgb: true
+          type: Normalize
+        - size_divisor: 32
+          type: Pad
+        - keys:
+          - img
+          type: ImageToTensor
+        - keys:
+          - img
+          type: Collect
+        type: MultiScaleFlipAug
+      type: CocoDataset
+    train:
+      ann_file: /opt/ml/detection/dataset/fold_0_train.json
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: /opt/ml/detection/dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - type: LoadAnnotations
+        with_bbox: true
+        with_mask: false
+      - flip_ratio: 0.5
+        type: RandomFlip
+      - policies:
+        - - img_scale:
+            - - 480
+              - 1333
+            - - 512
+              - 1333
+            - - 544
+              - 1333
+            - - 576
+              - 1333
+            - - 608
+              - 1333
+            - - 640
+              - 1333
+            - - 672
+              - 1333
+            - - 704
+              - 1333
+            - - 736
+              - 1333
+            - - 768
+              - 1333
+            - - 800
+              - 1333
+            keep_ratio: true
+            multiscale_mode: value
+            type: Resize
+        - - img_scale:
+            - - 400
+              - 1333
+            - - 500
+              - 1333
+            - - 600
+              - 1333
+            keep_ratio: true
+            multiscale_mode: value
+            type: Resize
+          - allow_negative_crop: true
+            crop_size:
+            - 384
+            - 600
+            crop_type: absolute_range
+            type: RandomCrop
+          - img_scale:
+            - - 480
+              - 1333
+            - - 512
+              - 1333
+            - - 544
+              - 1333
+            - - 576
+              - 1333
+            - - 608
+              - 1333
+            - - 640
+              - 1333
+            - - 672
+              - 1333
+            - - 704
+              - 1333
+            - - 736
+              - 1333
+            - - 768
+              - 1333
+            - - 800
+              - 1333
+            keep_ratio: true
+            multiscale_mode: value
+            override: true
+            type: Resize
+        type: AutoAugment
+      - mean:
+        - 123.675
+        - 116.28
+        - 103.53
+        std:
+        - 58.395
+        - 57.12
+        - 57.375
+        to_rgb: true
+        type: Normalize
+      - size_divisor: 32
+        type: Pad
+      - type: DefaultFormatBundle
+      - keys:
+        - img
+        - gt_bboxes
+        - gt_labels
+        type: Collect
+      type: CocoDataset
+    val:
+      ann_file: /opt/ml/detection/dataset/fold_0_val.json
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: /opt/ml/detection/dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - flip: false
+        img_scale:
+        - 512
+        - 512
+        transforms:
+        - keep_ratio: true
+          type: Resize
+        - type: RandomFlip
+        - mean:
+          - 123.675
+          - 116.28
+          - 103.53
+          std:
+          - 58.395
+          - 57.12
+          - 57.375
+          to_rgb: true
+          type: Normalize
+        - size_divisor: 32
+          type: Pad
+        - keys:
+          - img
+          type: ImageToTensor
+        - keys:
+          - img
+          type: Collect
+        type: MultiScaleFlipAug
+      type: CocoDataset
+    workers_per_gpu: 2
+data_root:
+  desc: null
+  value: /opt/ml/detection/dataset/
+dataset_type:
+  desc: null
+  value: CocoDataset
+dist_params:
+  desc: null
+  value:
+    backend: nccl
+evaluation:
+  desc: null
+  value:
+    interval: 1
+    metric: bbox
+    save_best: bbox_mAP_50
+img_norm_cfg:
+  desc: null
+  value:
+    mean:
+    - 123.675
+    - 116.28
+    - 103.53
+    std:
+    - 58.395
+    - 57.12
+    - 57.375
+    to_rgb: true
+load_from:
+  desc: null
+  value: null
+log_level:
+  desc: null
+  value: INFO
+lr_config:
+  desc: null
+  value:
+    policy: step
+    step:
+    - 27
+    - 33
+    warmup: linear
+    warmup_iters: 500
+    warmup_ratio: 0.001
+model:
+  desc: null
+  value:
+    backbone:
+      depths:
+      - 3
+      - 3
+      - 9
+      - 3
+      dims:
+      - 96
+      - 192
+      - 384
+      - 768
+      drop_path_rate: 0.4
+      in_chans: 3
+      layer_scale_init_value: 1.0
+      out_indices:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: ConvNeXt
+    neck:
+      in_channels:
+      - 96
+      - 192
+      - 384
+      - 768
+      num_outs: 5
+      out_channels: 256
+      type: FPN
+    pretrained: https://dl.fbaipublicfiles.com/convnext/convnext_tiny_1k_224.pth
+    roi_head:
+      bbox_head:
+      - bbox_coder:
+          target_means:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          target_stds:
+          - 0.1
+          - 0.1
+          - 0.2
+          - 0.2
+          type: DeltaXYWHBBoxCoder
+        conv_out_channels: 256
+        fc_out_channels: 1024
+        in_channels: 256
+        loss_bbox:
+          loss_weight: 10.0
+          type: GIoULoss
+        loss_cls:
+          loss_weight: 1.0
+          type: CrossEntropyLoss
+          use_sigmoid: false
+        norm_cfg:
+          requires_grad: true
+          type: BN
+        num_classes: 10
+        num_shared_convs: 4
+        num_shared_fcs: 1
+        reg_class_agnostic: false
+        reg_decoded_bbox: true
+        roi_feat_size: 7
+        type: ConvFCBBoxHead
+      - bbox_coder:
+          target_means:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          target_stds:
+          - 0.05
+          - 0.05
+          - 0.1
+          - 0.1
+          type: DeltaXYWHBBoxCoder
+        conv_out_channels: 256
+        fc_out_channels: 1024
+        in_channels: 256
+        loss_bbox:
+          loss_weight: 10.0
+          type: GIoULoss
+        loss_cls:
+          loss_weight: 1.0
+          type: CrossEntropyLoss
+          use_sigmoid: false
+        norm_cfg:
+          requires_grad: true
+          type: BN
+        num_classes: 10
+        num_shared_convs: 4
+        num_shared_fcs: 1
+        reg_class_agnostic: false
+        reg_decoded_bbox: true
+        roi_feat_size: 7
+        type: ConvFCBBoxHead
+      - bbox_coder:
+          target_means:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          target_stds:
+          - 0.033
+          - 0.033
+          - 0.067
+          - 0.067
+          type: DeltaXYWHBBoxCoder
+        conv_out_channels: 256
+        fc_out_channels: 1024
+        in_channels: 256
+        loss_bbox:
+          loss_weight: 10.0
+          type: GIoULoss
+        loss_cls:
+          loss_weight: 1.0
+          type: CrossEntropyLoss
+          use_sigmoid: false
+        norm_cfg:
+          requires_grad: true
+          type: BN
+        num_classes: 10
+        num_shared_convs: 4
+        num_shared_fcs: 1
+        reg_class_agnostic: false
+        reg_decoded_bbox: true
+        roi_feat_size: 7
+        type: ConvFCBBoxHead
+      bbox_roi_extractor:
+        featmap_strides:
+        - 4
+        - 8
+        - 16
+        - 32
+        out_channels: 256
+        roi_layer:
+          output_size: 7
+          sampling_ratio: 0
+          type: RoIAlign
+        type: SingleRoIExtractor
+      num_stages: 3
+      stage_loss_weights:
+      - 1
+      - 0.5
+      - 0.25
+      type: CascadeRoIHead
+    rpn_head:
+      anchor_generator:
+        ratios:
+        - 0.5
+        - 1.0
+        - 2.0
+        scales:
+        - 8
+        strides:
+        - 4
+        - 8
+        - 16
+        - 32
+        - 64
+        type: AnchorGenerator
+      bbox_coder:
+        target_means:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        target_stds:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        type: DeltaXYWHBBoxCoder
+      feat_channels: 256
+      in_channels: 256
+      loss_bbox:
+        beta: 0.1111111111111111
+        loss_weight: 1.0
+        type: SmoothL1Loss
+      loss_cls:
+        loss_weight: 1.0
+        type: CrossEntropyLoss
+        use_sigmoid: true
+      type: RPNHead
+    test_cfg:
+      rcnn:
+        mask_thr_binary: 0.5
+        max_per_img: 100
+        nms:
+          iou_threshold: 0.5
+          type: nms
+        score_thr: 0.05
+      rpn:
+        max_per_img: 1000
+        min_bbox_size: 0
+        nms:
+          iou_threshold: 0.7
+          type: nms
+        nms_across_levels: false
+        nms_post: 1000
+        nms_pre: 1000
+    train_cfg:
+      rcnn:
+      - assigner:
+          ignore_iof_thr: -1
+          match_low_quality: false
+          min_pos_iou: 0.5
+          neg_iou_thr: 0.5
+          pos_iou_thr: 0.5
+          type: MaxIoUAssigner
+        debug: false
+        pos_weight: -1
+        sampler:
+          add_gt_as_proposals: true
+          neg_pos_ub: -1
+          num: 512
+          pos_fraction: 0.25
+          type: RandomSampler
+      - assigner:
+          ignore_iof_thr: -1
+          match_low_quality: false
+          min_pos_iou: 0.6
+          neg_iou_thr: 0.6
+          pos_iou_thr: 0.6
+          type: MaxIoUAssigner
+        debug: false
+        pos_weight: -1
+        sampler:
+          add_gt_as_proposals: true
+          neg_pos_ub: -1
+          num: 512
+          pos_fraction: 0.25
+          type: RandomSampler
+      - assigner:
+          ignore_iof_thr: -1
+          match_low_quality: false
+          min_pos_iou: 0.7
+          neg_iou_thr: 0.7
+          pos_iou_thr: 0.7
+          type: MaxIoUAssigner
+        debug: false
+        pos_weight: -1
+        sampler:
+          add_gt_as_proposals: true
+          neg_pos_ub: -1
+          num: 512
+          pos_fraction: 0.25
+          type: RandomSampler
+      rpn:
+        allowed_border: 0
+        assigner:
+          ignore_iof_thr: -1
+          match_low_quality: true
+          min_pos_iou: 0.3
+          neg_iou_thr: 0.3
+          pos_iou_thr: 0.7
+          type: MaxIoUAssigner
+        debug: false
+        pos_weight: -1
+        sampler:
+          add_gt_as_proposals: false
+          neg_pos_ub: -1
+          num: 256
+          pos_fraction: 0.5
+          type: RandomSampler
+      rpn_proposal:
+        max_per_img: 2000
+        min_bbox_size: 0
+        nms:
+          iou_threshold: 0.7
+          type: nms
+        nms_across_levels: false
+        nms_post: 2000
+        nms_pre: 2000
+    type: CascadeRCNN
+mp_start_method:
+  desc: null
+  value: fork
+opencv_num_threads:
+  desc: null
+  value: 0
+optimizer:
+  desc: null
+  value:
+    betas:
+    - 0.9
+    - 0.999
+    constructor: LearningRateDecayOptimizerConstructor
+    lr: 0.0002
+    paramwise_cfg:
+      decay_rate: 0.7
+      decay_type: layer_wise
+      num_layers: 6
+    type: AdamW
+    weight_decay: 0.05
+optimizer_config:
+  desc: null
+  value:
+    grad_clip: null
+resume_from:
+  desc: null
+  value: null
+runner:
+  desc: null
+  value:
+    max_epochs: 12
+    type: EpochBasedRunner
+test_pipeline:
+  desc: null
+  value:
+  - type: LoadImageFromFile
+  - flip: false
+    img_scale:
+    - 512
+    - 512
+    transforms:
+    - keep_ratio: true
+      type: Resize
+    - type: RandomFlip
+    - mean:
+      - 123.675
+      - 116.28
+      - 103.53
+      std:
+      - 58.395
+      - 57.12
+      - 57.375
+      to_rgb: true
+      type: Normalize
+    - size_divisor: 32
+      type: Pad
+    - keys:
+      - img
+      type: ImageToTensor
+    - keys:
+      - img
+      type: Collect
+    type: MultiScaleFlipAug
+train_pipeline:
+  desc: null
+  value:
+  - type: LoadImageFromFile
+  - type: LoadAnnotations
+    with_bbox: true
+    with_mask: false
+  - flip_ratio: 0.5
+    type: RandomFlip
+  - policies:
+    - - img_scale:
+        - - 480
+          - 1333
+        - - 512
+          - 1333
+        - - 544
+          - 1333
+        - - 576
+          - 1333
+        - - 608
+          - 1333
+        - - 640
+          - 1333
+        - - 672
+          - 1333
+        - - 704
+          - 1333
+        - - 736
+          - 1333
+        - - 768
+          - 1333
+        - - 800
+          - 1333
+        keep_ratio: true
+        multiscale_mode: value
+        type: Resize
+    - - img_scale:
+        - - 400
+          - 1333
+        - - 500
+          - 1333
+        - - 600
+          - 1333
+        keep_ratio: true
+        multiscale_mode: value
+        type: Resize
+      - allow_negative_crop: true
+        crop_size:
+        - 384
+        - 600
+        crop_type: absolute_range
+        type: RandomCrop
+      - img_scale:
+        - - 480
+          - 1333
+        - - 512
+          - 1333
+        - - 544
+          - 1333
+        - - 576
+          - 1333
+        - - 608
+          - 1333
+        - - 640
+          - 1333
+        - - 672
+          - 1333
+        - - 704
+          - 1333
+        - - 736
+          - 1333
+        - - 768
+          - 1333
+        - - 800
+          - 1333
+        keep_ratio: true
+        multiscale_mode: value
+        override: true
+        type: Resize
+    type: AutoAugment
+  - mean:
+    - 123.675
+    - 116.28
+    - 103.53
+    std:
+    - 58.395
+    - 57.12
+    - 57.375
+    to_rgb: true
+    type: Normalize
+  - size_divisor: 32
+    type: Pad
+  - type: DefaultFormatBundle
+  - keys:
+    - img
+    - gt_bboxes
+    - gt_labels
+    type: Collect
+workflow:
+  desc: null
+  value:
+  - - train
+    - 1
