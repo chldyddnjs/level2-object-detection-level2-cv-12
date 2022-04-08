@@ -1,80 +1,166 @@
-바야흐로 대량 생산, 대량 소비의 시대. 우리는 많은 물건이 대량으로 생산되고, 소비되는 시대를 살고 있습니다. 하지만 이러한 문화는 '쓰레기 대란', '매립지 부족'과 같은 여러 사회 문제를 낳고 있습니다.
-<img src="https://s3-ap-northeast-2.amazonaws.com/prod-aistages-public/app/Users/00000274/files/7645ad37-9853-4a85-b0a8-f0f151ef05be..png"/>
+# CV-12 YOLO 랩업리포트
 
-분리수거는 이러한 환경 부담을 줄일 수 있는 방법 중 하나입니다. 잘 분리배출 된 쓰레기는 자원으로서 가치를 인정받아 재활용되지만, 잘못 분리배출 되면 그대로 폐기물로 분류되어 매립 또는 소각되기 때문입니다.
+# 1. 프로젝트 개요
 
-따라서 우리는 사진에서 쓰레기를 Detection 하는 모델을 만들어 이러한 문제점을 해결해보고자 합니다. 문제 해결을 위한 데이터셋으로는 일반 쓰레기, 플라스틱, 종이, 유리 등 10 종류의 쓰레기가 찍힌 사진 데이터셋이 제공됩니다.
+사진에서 쓰레기를 Detection 하는 모델을 만들어 이러한 문제점을 해결해보고자 한다. 문제 해결을 위한 데이터셋으로는 일반 쓰레기, 플라스틱, 종이, 유리 등 10 종류의 쓰레기가 찍힌 사진 데이터셋이 제공된다.
 
-여러분에 의해 만들어진 우수한 성능의 모델은 쓰레기장에 설치되어 정확한 분리수거를 돕거나, 어린아이들의 분리수거 교육 등에 사용될 수 있을 것입니다. 부디 지구를 위기로부터 구해주세요! 🌎
+이 데이터셋으로 쓰레기 사진이 들어있는 input data 에서 Object detection task를 진행하여 분리수거를 하는 것이 이번 competition의 목표이다.
 
+- 모델 개요
 
-<p>!cd /opt/ml/detection/baseline/mmedetction></p>
-conda activate detection
+![KakaoTalk_20220408_170052363.jpg](CV-12%20YOLO%20b6fb0/KakaoTalk_20220408_170052363.jpg)
 
-# train
+# 2. 프로젝트 팀 구성 및 역할
 
-python tools/train.py {path/to/file}
+- 김승현: YOLO 모델 테스트, ensemble
+- 노창현: tood 모델 테스트, data augmentation
+- 최홍록: detector 테스트 , data EDA
+- 최진아: htc, swin backbone 모델 테스트 , data augmentation
+- 최용원: DETR 테스트, ensemble
 
-# test
-
-python tools/test.py {path/to/file}
-
-
-# list up and configs for mmdetection
-[basic] faster_rcnn
-[basic] cascade_rcnn with swin + [optinal]augmentation + cosinAnealing + adamW
-[basic] htc with swin + [optional]augmentation + cosinAnealing + adamW
-[basic] tood with convnext + [optional]augmentation + cosinAnealing + adamW
-[basic] deformable detr
-[basic] yolox
-[basic] detr
-# list up and configs for naive model come from github or kaggle
-[basic] efficientdet
-[basic] DINO
-# experiment
-<li>faster_rcnn -> 0.4010, epoch=12, max_epoch=12</li>
-<li>cascade_rcnn + -> 0.5825, epoch =12, max_epoch=12</li>
-<li>htc with swin -> 0.5567, epoch=12, max_epoch=12</li>
-<li>htc with swin + aug -> 0.5816, epoch=12, max_epoch=24 원래 24epoch까지 올라가야하지만 중간에 실수로 중간에 꺼짐</li>
-<li>detr -> 0.0000, epoch=100, max_epoch=150</li>
-<li>yolox -> 0.1034, epoch=100, max_epoch=300</li>
-<li>efficientdet ->, 0.3443 epoch=50, max_epoch=50</li>
-<li>efficientdet + aug -> 0.2431 epoch=50, max_epoch=50</li>
-<li>DINO -> (backbone을 vit -> swin으로 바꾸려고 시도한 실험)</li>
-<li>tood with convnext + aug -> 0.6171 epoch=12</li>
-<li>deformable detr -> cuda version 불일치로 실험 x</li>
-<li>ensemble =[ </li>
-<li>htc_swin_adamW_aug_cosinAnealing(0.6272)  + cascade_rcnn_convnext_adamW_cosinAnealing(0.6070)  + </li>
-<li>cascade_rcnn_convnext_adamW_cosinAnealing_aug(0.6132) + </li>
-<li>cascade_rcnn_swin_adamW_aug_stepLR(0.5825) ]</li>
-<li>LB -> 0.6641 </li>
-
-# augmentation
-사용한 augmentation은 one of { [brightness,contrest,Hue,saturation], [RGB Shift, Image Roate], [bulr, medium blur] } 를 사용했으며 일반화 성능을 높여줄 기대를 하며 위와 같은 기법을 사용했다.
-일반화 성능을 조금더 높이기 위해
-autoAug,mosaic,mixup 등의 기법을 사용하고 싶었지만 error를 처리하지 못해 사용하지 못했다.
-# loss
-cascade_rcnn의 smoothL1 loss함수를 Giou loss로 바꾸었을 때 성능이 굉장히 안좋다 기본으로 들어가 있는 loss 함수를 쓰는 것이 오히려 낫다는 말을 듣고 모든 실험에서 일부러 loss를 바꾸지 않았습니다.
-EfficientDet을 사용하면서 loss가 적은 것과 loss가 상대적으로 큰것을 제출해봤을 때 당연한 얘기지만 성능의 차이가 꽤 있었습니다.
-# optimizer and scheduler
-adamW
-sgd(momentom)
-모델에 따라 optimizer가 기본적으로 다르지만 일반적으로 adamW가 성능이 되게 좋았고 adamW가 loss를 잘 줄이지 못할 때 sgd를 쓰면 loss가 잘 줄어드는 현상도 볼 수 있었다. 뭐든지 만능은 없습니다. 
  
-stepLR
-cosinAnealing
-stepLR과 cosinAnealing을 두고 실험을 한 결과 모든 실험에 대해서 cosinAnealing이 더 성능이 더 뛰어났다.
-# 느낀점
-mmdetection 기준으로 최대한 다양한 모델을 사용해보려고 노력했지만 이론적으로 굉장히 좋다고 생각되는 모델들이 오히려 안좋다고 생각한 모델들 보다 성능이 떨어지는 결과를 보고 task에 따라 적절한 detector model이 존재한다고 느꼈습니다. backbone으로는 transformer,convnext가 가장 성능이 좋았으며 나머지(resnet,darknet,VGG16)backbone은 좋은 성능을 내지 못했습니다. (yolov5,yoloR 제외) feature map을 뽑는데 있어서는 모델이 정해져있는것 같은 느낌을 받았습니다. 모든 모델에 같은 augmentation을 적용해보았지만 어떤 모델은 성능이 올라가고 나머지는 그렇지 못했습니다. augmentation이 만능은 아닌것 같고 모델에 맞는 task에 맞는 augmentation이 따로 존재합니다. 그리고 대회를 진행하는데 있어 다양한 모델 with 어느정도의 성능이 나오는 모델을 WBF로 앙상블 했을 때 성능이 올라가는 것을 확인했습니다.
-# 아쉬운점
-mmdetection 사용법에 익숙해지는데 시간이 오래걸렸고 detr,DINO model의 backbone을 바꾸려고 시도했지만 결국엔 못바꾸고 시간만 버렸습니다. 
-체계적으로 실험을 구상하고 행동으로 옮긴다는 생각을 가지고 있었지만 제대로 이루어지지 않았습니다. 다른 팀원들의 실험 내용을 다 알지 못했고 팀에 기여도가 낮다고 느꼈고 대회를 진행하면서 도움을 주기보다는 도움을 많이 받았습니다.
- EDA를 해봤지만 클래스의 불균형이 있다는 것만 확인을 하였고 팀원이 만들어준 코드(by 진아님)를 통해 이미지 내에서 bbox를 시각화 할 수있었지만 아직 인사이트가 부족해서 아 그렇구나라는 생각만 들고 대회를 진행함에 있어 EDA를 잘활용하지 못한것 같아 아쉽습니다.
-mmdetection에서 클래스별 mAP를 출력을 해보고 general trash를 잘 못잡고 못잡는 이유는 small object이고 EDA로 봤을 때 상대적으로 데이터가 적기 때문이라는 것을 인지 했지만 small object를 잘 잡기 위해 여러가지 모델을 써보며 mAP_s를 기준으로 무작정 실험을 했습니다.(아직도 모르겠네요)
-# 앞으로 해야할 점
-실험을 덜 하더라도 논문을 완벽하게 읽을 것 입니다. 하나의 모델을 완벽하게 알고 있어야 더 잘 활용할수 있기 때문입니다. 무작정 실험하지 말고 머릿속으로 개념을 알고 사용할 것이고 협업의 관점에서 더 커뮤니케이션이 잘 이루어지고 프로젝트의 모든 것을 알도록 노력할 것입니다.
- 
-autoAug,mosaic,mixup 등의 기법을 사용하고 싶었지만 error를 처리하지 못해 사용하지 못했습니다. 다음엔 꼭 이러한 방법들을 적용할 것입니다.
- 
-협업이 잘 이루어지도록 많은 노력을 할것 입니다.
 
+# 3. 프로젝트 수행 절차 및 결과
+
+## 탐색적 분석 및 전처리
+
+- **Detection 예시**
+
+![Untitled](CV-12%20YOLO%20b6fb0/Untitled.png)
+
+- **class별 분포**
+
+![Untitled](CV-12%20YOLO%20b6fb0/Untitled%201.png)
+
+- **bbox area 분포**
+
+![Untitled](CV-12%20YOLO%20b6fb0/Untitled%202.png)
+
+- **class 별 bbox area 분포 - S(0~32**2), M(32**2~96**2), L(96**2~)**
+
+![Untitled](CV-12%20YOLO%20b6fb0/Untitled%203.png)
+
+- **학습시 class별 AP**
+    
+    ![Untitled](CV-12%20YOLO%20b6fb0/Untitled%204.png)
+    
+    - class의 개수는 model 성능에 유의미한 영향을 미치지는 않는 것으로 파악
+
+train.json파일에서 bbox정보를 가져와 시각화를 진행 후 class별 area의 사이즈를 파악 그리고 이미지 당 몇 개의 class, bbox를 가지고 있는지 파악 후 어떻게 할 지 정하였다.
+
+## K-FOLD
+
+KFOLD를 적용시키기 위해 각 클래스 별 분포에 맞게 FOLD를 나눠주었다.
+
+각 FOLD 당 train set : validation set = 8 : 2 비율로 나누어 주어 FOLD 별 mAP를 확인해 일반화 성능을 확인하였다. 이를 통해 Cross validation을 통해 모델의 일반화를 하였다.
+
+## Data Augmentation
+
+augmentation은 학습 시 torchvision보다 빠르다고 알려져 있는 albumentation 라이브러리를 사용했으며 generalization performance를 끌어올리기 위해 여러가지 transform을 적용하였다.
+
+또한 일반화 성능을 끌어올리기 위한 trick으로 TTA를 적용하였다.
+
+- brightness
+- contrast
+- saturation
+- Hue
+- RGBshift
+- random image rotate
+- random flip
+- blur
+- medium blur
+- Mixup
+- mosaic
+- resize
+- normalize
+
+## Optimizer , Learning Scheduler
+
+learning rate scheduler 및 optimizer를 다양한 종류로 실험해가며 빠르고 정확하게 Local minima 찾아갈 수 있게 하였다. 최종적으로 momentum SGD, adamW와 cosine annealing을 사용하였다.
+
+learning rate을 0.01에서 1/10씩 줄여가며 총 세 번 실험을 하였다. (learning rate이 줄어들수록 그래프가 부드러워지는 효과를 볼 수 있고 local minimum에 근접할 수 있는 효과를 봄)
+
+task에 맞는 detector와 extractor를 결정하기 위해 여러가지 model을 사용함으로 써 최적의 조합을 찾는 model search를 진행하였다.
+
+대회를 진행하는 도중에 다시 EDA를 진행하여 class 별 mAP를 확인하였고 general trash의 mAP가 낮은 것을 확인한 후 small area 부분을 더 잘 찾는 model을 search하였다.
+
+## Model
+
+- One Stage detector
+    - Yolor
+    - yolov5
+    - yolox
+    - detr
+    - TOOD
+        - resnet
+        - convnext
+- Two Stage detector
+    - Cascade Rcnn
+        - ConvNeXt
+        - resnet
+        - Swin Transformer
+    - Faster Rcnn
+        - vgg16
+        - swin Transformer
+    - HTC
+        - swin Transformer
+    - Double Head Faster Rcnn
+        - Swin Transformer
+    - Efficientdet
+        - efficientnet b7
+
+small object에 대한 mAP가 낮은 것을 확인하였고 이에 anchor box를 조정하였다.
+
+다양한 실험을 위해 rpn_haed 변경 및 cascade stage 수 추가를 시도해보았다.
+
+## Ensemble
+
+cross validation을 포함한 model을 학습시키며 performance가 잘  나온 것들을 추려내었고 그 중에서도 mAP_s, mAP_l, mAP_m 성능이 상대적으로 뛰어난 것들을 추려내어 WBF를 적용하였다. (총 30개의 csv 파일을 사용)
+
+### 결과물
+
+ 
+
+![Untitled](CV-12%20YOLO%20b6fb0/Untitled%205.png)
+
+- **Weight & Biases**
+
+![Untitled](CV-12%20YOLO%20b6fb0/Untitled%206.png)
+
+- 대회 결과
+LB score - **public : 0.7152**
+              - **private : 0.7017**
+    
+    **Final Rank : 6/19 th place**
+    
+    ![Untitled](CV-12%20YOLO%20b6fb0/Untitled%207.png)
+    
+- **최종 모델**
+    
+    
+    | Detector | backbone | fold |
+    | --- | --- | --- |
+    | cascade rcnn | convnext  | 0~5 |
+    | cascade rcnn | swin transformer | 0, 1, 3 |
+    | TOOD             | convnext  | 0~5 |
+    | htc | swin transformer | 0~5 |
+    | double head | swin transformer | 0 |
+    | YOLOr | - | 0~5 |
+    | YOLOv5 | - | 4 |
+
+# 5. 자체 평가 의견
+
+- **잘한 점들**
+    - 다양한 모델들을 앙상블하여 성능 향상을 할 수 있었다.
+    - 협업을 통해 긴 시간 학습하는 모델의 단점을 보완할 수 있었다.
+    - 협업툴로써 **[Weights & Biases](https://wandb.ai/site)**를 잘 활용했다
+    - 여러 모델들을 사용하며 mmdetection 에 조금 더 적응하고 wandb 를 통한 협업을 경험하였다
+- **시도 했으나 잘 되지 않았던 것들**
+    - general trash에 대한 mAP가 낮아 data manufacturing을 추천받아 시도하려고 하였지만       실패하였다.
+    - SOTA로 알려진 모델들을 사용하였지만, cascade RCNN + Swin 이외의 모델들은 성능이 높지 않았다.
+    - 최근 나온 모델들을 더 사용해보고 싶었지만 적용을 제대로 못한 모델들이 있었다
+    
+- **아쉬웠던 점들**
+    - 모델에 대한 이해가 부족한 상태로 성능 위주의 실험을 진행했다.
+    - mmdetection 라이브러리의 이해 부족으로 cutmix, mixup, mosaic 같은 augmentation을 늦게 사용하여 적은 수의 모델에만 적용하였다.
+    - github을 활용한 협업이 미숙했다.
